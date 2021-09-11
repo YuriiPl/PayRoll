@@ -4,6 +4,7 @@ import com.home.urix.PayRoll.Model.MainModel;
 import com.home.urix.PayRoll.View.MainView;
 import com.home.urix.PayRoll.View.TextConstants;
 import com.home.urix.PayRoll.View.TextFactory;
+import com.home.urix.PayRoll.View.TextMenuConstant;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -37,19 +38,31 @@ public class MainController {
     private BigDecimal inputSalaryFundWithScanner(Locale locale){
         DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(locale);
         df.setParseBigDecimal(true);
-        BigDecimal bd = BigDecimal.valueOf(0);
-        boolean ok=false;
-        while(!ok) {
+        while(true) {
             MainView.printMessageById(TextConstants.SPECIFY_SALARY_FUND);
             String userInput = scanner.nextLine();
             try {
-                bd = (BigDecimal) df.parseObject(userInput);
-                ok=true;
+                return (BigDecimal) df.parseObject(userInput);
             } catch (ParseException e) {
                 MainView.wrongInputDataMessage();
             }
         }
-        return bd;
+    }
+
+    private TextMenuConstant getUserMenuChoice() {
+        TextMenuConstant[] enums=TextMenuConstant.values();
+        while(true) {
+            try {
+                MainView.showActionMenu();
+                int userChoice = Integer.parseInt(scanner.nextLine());
+                if(userChoice >= 0 && userChoice < enums.length){
+                    return enums[userChoice];
+                }
+                throw new NumberFormatException("Wrong number!");
+            } catch (NumberFormatException e){
+                MainView.wrongInputDataMessage();
+            }
+        }
     }
 
     public void startProcess(){
@@ -65,12 +78,29 @@ public class MainController {
             default:
 
         }
+
         MainView.printMessageById(TextConstants.GREETINGS_MESSAGE);
 
-        model.setSalaryFund(inputSalaryFundWithScanner(MainView.getLocale()));
+        TextMenuConstant userChoice;
+        while((userChoice= getUserMenuChoice())!=TextMenuConstant.OPTION_EXIT){
+            switch (userChoice){
+                case OPTION_SPECIFY_FUND:
+                    model.setSalaryFund(inputSalaryFundWithScanner(MainView.getLocale()));
+                    break;
+                case OPTION_BALANCE_ALLOCATION_TYPE:
+                    break;
+                case OPTION_BALANCE_ALLOCATION_PLACE:
+                    break;
+                case OPTION_ADD_EMPLOYEE:
+                    break;
+            }
+        }
+
 
 
 
     }
+
+
 
 }

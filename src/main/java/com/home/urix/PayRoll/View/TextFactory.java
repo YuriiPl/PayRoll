@@ -8,12 +8,15 @@ import java.util.ResourceBundle;
 public class TextFactory {
     static private ResourceBundle messages;
     static private ResourceBundle regexps;
+    static private ResourceBundle menuMessages;
     static private Locale locale;
 
+    static private final String MESSAGES_BUNDLE="messages";
+    static private final String REGEXPS_BUNDLE="regexps";
+    static private final String MENU_MESSAGES_BUNDLE="menumessages";
+
     static {
-        messages = ResourceBundle.getBundle("messages");
-        regexps = ResourceBundle.getBundle("regexps");
-        locale = Locale.ENGLISH;
+        changeLocale(Locale.ENGLISH);
     }
 
     public static Locale getLocale() {
@@ -27,27 +30,41 @@ public class TextFactory {
      * @see Locale
      */
     static public void changeLocale(Locale newLocale){
-        messages = ResourceBundle.getBundle("messages",locale);
-        regexps = ResourceBundle.getBundle("regexps",locale);
         locale = newLocale;
+        messages = ResourceBundle.getBundle(MESSAGES_BUNDLE,locale);
+        regexps = ResourceBundle.getBundle(REGEXPS_BUNDLE,locale);
+        menuMessages = ResourceBundle.getBundle(MENU_MESSAGES_BUNDLE,locale);
     }
 
     /**
-     * @param str id from resource file
+     * @param textEnum id from resource file
      * @return message according to id in resource file
      */
-    static public String getString(TextConstants str){
-        if(messages.containsKey(str.value()))
-            return messages.getString(str.value());
-        return messages.getString("input.string.unknown.id")+str.value();
+    static public String getString(TextConstants textEnum){
+        if(messages.containsKey(textEnum.value()))
+            return messages.getString(textEnum.value());
+        return messages.getString("input.string.unknown.id")+textEnum.value();
     }
 
     /**
-     * @param regExp id from regexp resource file
+     * @param regExpEnum id from regexp resource file
      * @return Regular expression according to id in regexp resource file
      * @see java.util.regex.Pattern
      */
-    static public String getRegExpString(RegExpConstants regExp){
-        return regexps.getString(regExp.value());
+    static public String getRegExpString(RegExpConstants regExpEnum){
+        if(regexps.containsKey(regExpEnum.value()))
+            return regexps.getString(regExpEnum.value());
+        return messages.getString("input.string.unknown.id")+regExpEnum.value();
+    }
+
+    /**
+     * @param menuEnum id from regexp resource file
+     * @return Regular expression according to id in regexp resource file
+     * @see java.util.regex.Pattern
+     */
+    static public String getMenuString(TextMenuConstant menuEnum){
+        if(menuMessages.containsKey(menuEnum.value()))
+            return menuMessages.getString(menuEnum.value());
+        return messages.getString("input.string.unknown.id")+menuEnum.value();
     }
 }

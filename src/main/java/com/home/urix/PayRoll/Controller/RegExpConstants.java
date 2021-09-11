@@ -1,8 +1,7 @@
 package com.home.urix.PayRoll.Controller;
 
 public enum RegExpConstants {
-    CHOOSE_LANGUAGE("choose.language"),
-    MONEY_VALUE("money.value");
+    CHOOSE_LANGUAGE("choose.language");
 
     private final String name;
 

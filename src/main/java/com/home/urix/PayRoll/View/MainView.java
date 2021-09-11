@@ -9,6 +9,10 @@ public interface MainView {
         System.out.println(TextFactory.getString(id));
     }
 
+    static void printMenuById(TextMenuConstant id){
+        System.out.println(id.ordinal()+". "+TextFactory.getMenuString(id));
+    }
+
     static void wrongInputDataMessage() {
         System.out.println(TextFactory.getString(TextConstants.WRONG_INPUT_DATA));
     }
@@ -19,6 +23,13 @@ public interface MainView {
 
     static Locale getLocale() {
         return TextFactory.getLocale();
+    }
+
+    static void showActionMenu(){
+        MainView.printMessageById(TextConstants.MENU_HEADER);
+        for (TextMenuConstant opt : TextMenuConstant.values()) {
+            MainView.printMenuById(opt);
+        }
     }
 
 }
