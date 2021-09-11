@@ -1,19 +1,24 @@
 package com.home.urix.PayRoll.View;
 
 import java.util.Locale;
-import java.util.ResourceBundle;
+
 
 public interface MainView {
-    static void printMessageById(String stringId){
-        System.out.println(TextFactory.getString(stringId));
+
+    static void printMessageById(TextConstants id){
+        System.out.println(TextFactory.getString(id));
     }
 
-    static void inputWrongDataMessage() {
-        System.out.println(TextFactory.getString("input.string.data.wrong"));
+    static void wrongInputDataMessage() {
+        System.out.println(TextFactory.getString(TextConstants.WRONG_INPUT_DATA));
     }
 
-    static public void changeLocale(Locale locale){
+    static void changeLocale(Locale locale){
         TextFactory.changeLocale(locale);
+    }
+
+    static Locale getLocale() {
+        return TextFactory.getLocale();
     }
 
 }

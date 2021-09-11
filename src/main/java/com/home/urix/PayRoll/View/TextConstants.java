@@ -1,6 +1,18 @@
 package com.home.urix.PayRoll.View;
 
-public interface TextConstants {
-    String GREETINGS_MESSAGE="start.greeting.message";
-    String CHOOSE_LANGUAGE_MESSAGE="choose.your.language";
+public enum TextConstants {
+    WRONG_INPUT_DATA("input.string.data.wrong"),
+    GREETINGS_MESSAGE("start.greeting.message"),
+    CHOOSE_LANGUAGE_MESSAGE("choose.your.language"),
+    SPECIFY_SALARY_FUND("specify.salary.fund");
+
+    private final String name;
+
+    TextConstants(String name){
+        this.name=name;
+    }
+
+    public String value(){
+        return name;
+    }
 }
