@@ -44,8 +44,12 @@ public class MainController {
         return showEnumMenu(LanguageEnum.values(),MainView::showLanguageMenu);
     }
 
-    private TextMenuEnum getUserMenuChoice(){
-        return showEnumMenu(TextMenuEnum.values(),MainView::showActionMenu);
+    private MainMenuEnum getUserMenuChoice(){
+        return showEnumMenu(MainMenuEnum.values(),MainView::showActionMenu);
+    }
+
+    private EmployeeMenuEnum getEmployeeMenuChoice(){
+        return showEnumMenu(EmployeeMenuEnum.values(),MainView::showEmployeesMenu);
     }
 
     private LanguageEnum getUserLanguageChoice1(){
@@ -64,8 +68,8 @@ public class MainController {
         }
     }
 
-    private TextMenuEnum getUserMenuChoice1() {
-        TextMenuEnum[] enums= TextMenuEnum.values();
+    private MainMenuEnum getUserMenuChoice1() {
+        MainMenuEnum[] enums= MainMenuEnum.values();
         while(true) {
             try {
                 MainView.showActionMenu();
@@ -105,19 +109,28 @@ public class MainController {
 
         MainView.printMessageById(TextConstants.GREETINGS_MESSAGE);
 
-        TextMenuEnum userChoice;
-        while((userChoice = getUserMenuChoice())!= TextMenuEnum.OPTION_EXIT) {
+        MainMenuEnum userChoice;
+        while((userChoice = getUserMenuChoice())!= MainMenuEnum.OPTION_EXIT) {
             switch (userChoice){
                 case OPTION_SPECIFY_FUND:
                     model.setSalaryFund(inputSalaryFundWithScanner(MainView.getLocale()));
                     break;
-                case OPTION_SHOW_EMPLOYEES:
+                case OPTION_SHOW_EMPLOYEES_MENU:
+                    EmployeeMenuEnum userEmployeeChoice;
+                    while((userEmployeeChoice = getEmployeeMenuChoice())!= EmployeeMenuEnum.OPTION_EXIT) {
+                        switch (userEmployeeChoice) {
+                            case OPTION_SHOW_EMPLOYEES:
+                                break;
+                            case OPTION_ADD_EMPLOYEE:
+                                break;
+                            case OPTION_FIRE_EMPLOYEE:
+                                break;
+                        }
+                    }
                     break;
                 case OPTION_BALANCE_ALLOCATION_TYPE:
                     break;
                 case OPTION_BALANCE_ALLOCATION_PLACE:
-                    break;
-                case OPTION_ADD_EMPLOYEE:
                     break;
                 case OPTION_PAYROLL_PRINT:
                     break;

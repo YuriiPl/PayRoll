@@ -9,7 +9,7 @@ public interface MainView {
         System.out.println(TextFactory.getString(id));
     }
 
-    static void printMenuById(TextMenuEnum id){
+    static <T extends Enum<T>> void printMenuById(T id){
         System.out.println(id.ordinal()+". "+TextFactory.getMenuString(id));
     }
 
@@ -31,7 +31,7 @@ public interface MainView {
 
     static void showActionMenu(){
         MainView.printMessageById(TextConstants.MENU_HEADER);
-        for (TextMenuEnum opt : TextMenuEnum.values()) {
+        for (MainMenuEnum opt : MainMenuEnum.values()) {
             MainView.printMenuById(opt);
         }
     }
@@ -39,7 +39,14 @@ public interface MainView {
     static void showLanguageMenu(){
         MainView.printMessageById(TextConstants.CHOOSE_LANGUAGE_MESSAGE);
         for (LanguageEnum opt : LanguageEnum.values()) {
-            MainView.printString(opt.ordinal()+". "+opt.name());
+            MainView.printMenuById(opt);
+        }
+    }
+
+    static void showEmployeesMenu(){
+        MainView.printMessageById(TextConstants.MENU_EMPLOYEES_HEADER);
+        for (EmployeeMenuEnum opt : EmployeeMenuEnum.values()) {
+            MainView.printMenuById(opt);
         }
     }
 

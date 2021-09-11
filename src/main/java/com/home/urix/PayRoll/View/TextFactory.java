@@ -58,13 +58,14 @@ public class TextFactory {
     }
 
     /**
-     * @param menuEnum id from regexp resource file
+     * @param menuEnum id from menumessages resource file
      * @return Regular expression according to id in regexp resource file
-     * @see java.util.regex.Pattern
+     * @see java.lang.Enum
      */
-    static public String getMenuString(TextMenuEnum menuEnum){
-        if(menuMessages.containsKey(menuEnum.value()))
-            return menuMessages.getString(menuEnum.value());
-        return messages.getString("input.string.unknown.id")+menuEnum.value();
+    static public <T extends Enum<T>> String getMenuString(T menuEnum){
+        String id = menuEnum.getClass().getSimpleName() + "." + menuEnum;
+        if(menuMessages.containsKey(id))
+            return menuMessages.getString(id);
+        return messages.getString("input.string.unknown.id")+id;
     }
 }

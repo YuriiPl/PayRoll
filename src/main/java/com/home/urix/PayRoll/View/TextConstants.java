@@ -6,6 +6,7 @@ public enum TextConstants {
     CHOOSE_LANGUAGE_MESSAGE("choose.your.language"),
     SPECIFY_SALARY_FUND("specify.salary.fund"),
     MENU_HEADER("menu.header"),
+    MENU_EMPLOYEES_HEADER("menu.employees.header"),
     GOODBYE_MESSAGE("goodbye.message");
 
 
