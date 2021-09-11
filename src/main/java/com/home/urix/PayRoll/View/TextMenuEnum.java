@@ -1,6 +1,6 @@
 package com.home.urix.PayRoll.View;
 
-public enum TextMenuConstant {
+public enum TextMenuEnum {
     OPTION_SPECIFY_FUND("option.specify.fund"),
     OPTION_ADD_EMPLOYEE("option.add.employee"),
     OPTION_SHOW_EMPLOYEES("option.show.employees"),
@@ -11,7 +11,7 @@ public enum TextMenuConstant {
 
     private final String value;
 
-    TextMenuConstant(String value){
+    TextMenuEnum(String value){
         this.value =value;
     }
 

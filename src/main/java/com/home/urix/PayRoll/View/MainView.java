@@ -9,8 +9,12 @@ public interface MainView {
         System.out.println(TextFactory.getString(id));
     }
 
-    static void printMenuById(TextMenuConstant id){
+    static void printMenuById(TextMenuEnum id){
         System.out.println(id.ordinal()+". "+TextFactory.getMenuString(id));
+    }
+
+    static void printString(String str){
+        System.out.println(str);
     }
 
     static void wrongInputDataMessage() {
@@ -27,8 +31,15 @@ public interface MainView {
 
     static void showActionMenu(){
         MainView.printMessageById(TextConstants.MENU_HEADER);
-        for (TextMenuConstant opt : TextMenuConstant.values()) {
+        for (TextMenuEnum opt : TextMenuEnum.values()) {
             MainView.printMenuById(opt);
+        }
+    }
+
+    static void showLanguageMenu(){
+        MainView.printMessageById(TextConstants.CHOOSE_LANGUAGE_MESSAGE);
+        for (LanguageEnum opt : LanguageEnum.values()) {
+            MainView.printString(opt.ordinal()+". "+opt.name());
         }
     }
 

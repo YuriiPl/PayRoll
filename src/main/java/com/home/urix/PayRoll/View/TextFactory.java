@@ -62,7 +62,7 @@ public class TextFactory {
      * @return Regular expression according to id in regexp resource file
      * @see java.util.regex.Pattern
      */
-    static public String getMenuString(TextMenuConstant menuEnum){
+    static public String getMenuString(TextMenuEnum menuEnum){
         if(menuMessages.containsKey(menuEnum.value()))
             return menuMessages.getString(menuEnum.value());
         return messages.getString("input.string.unknown.id")+menuEnum.value();

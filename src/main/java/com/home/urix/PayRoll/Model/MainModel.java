@@ -5,6 +5,10 @@ import java.math.BigDecimal;
 public class MainModel {
     private BigDecimal salaryFund;
 
+    public MainModel(){
+        salaryFund=BigDecimal.valueOf(0);
+    }
+
     public BigDecimal getSalaryFund() {
         return salaryFund;
     }
@@ -12,4 +16,5 @@ public class MainModel {
     public void setSalaryFund(BigDecimal salaryFund) {
         this.salaryFund = salaryFund;
     }
+
 }

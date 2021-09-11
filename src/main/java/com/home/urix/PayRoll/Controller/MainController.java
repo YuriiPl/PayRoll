@@ -1,12 +1,10 @@
 package com.home.urix.PayRoll.Controller;
 
 import com.home.urix.PayRoll.Model.MainModel;
-import com.home.urix.PayRoll.View.MainView;
-import com.home.urix.PayRoll.View.TextConstants;
-import com.home.urix.PayRoll.View.TextFactory;
-import com.home.urix.PayRoll.View.TextMenuConstant;
+import com.home.urix.PayRoll.View.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -23,16 +21,63 @@ public class MainController {
         model = new MainModel();
     }
 
-    private String getStringFromScanner(TextConstants messageResourceBundleId, RegExpConstants regexpResourceBundleId){
-        String currentRegExp = TextFactory.getRegExpString(regexpResourceBundleId);
-        MainView.printMessageById(messageResourceBundleId);
-        String userInput = scanner.nextLine();
-        while(!userInput.matches(currentRegExp)) {
-            MainView.wrongInputDataMessage();
-            MainView.printMessageById(messageResourceBundleId);
-            userInput = scanner.nextLine();
+    private interface VoidFunction {
+        public void showMenu();
+    }
+
+    private <EnumTemplate extends Enum<EnumTemplate>> EnumTemplate showEnumMenu(EnumTemplate[] enums, VoidFunction menu){
+        while(true) {
+            menu.showMenu();
+            try {
+                int userChoice = Integer.parseInt(scanner.nextLine());
+                if(userChoice >= 0 && userChoice < enums.length){
+                    return enums[userChoice];
+                }
+                MainView.wrongInputDataMessage();
+            } catch (NumberFormatException e){
+                MainView.wrongInputDataMessage();
+            }
         }
-        return userInput;
+    }
+
+    private LanguageEnum getUserLanguageChoice(){
+        return showEnumMenu(LanguageEnum.values(),MainView::showLanguageMenu);
+    }
+
+    private TextMenuEnum getUserMenuChoice(){
+        return showEnumMenu(TextMenuEnum.values(),MainView::showActionMenu);
+    }
+
+    private LanguageEnum getUserLanguageChoice1(){
+        LanguageEnum[] enums = LanguageEnum.values();
+        while(true) {
+            MainView.showLanguageMenu();
+            try {
+                int userChoice = Integer.parseInt(scanner.nextLine());
+                if(userChoice >= 0 && userChoice < enums.length){
+                    return enums[userChoice];
+                }
+                MainView.wrongInputDataMessage();
+            } catch (NumberFormatException e){
+                MainView.wrongInputDataMessage();
+            }
+        }
+    }
+
+    private TextMenuEnum getUserMenuChoice1() {
+        TextMenuEnum[] enums= TextMenuEnum.values();
+        while(true) {
+            try {
+                MainView.showActionMenu();
+                int userChoice = Integer.parseInt(scanner.nextLine());
+                if(userChoice >= 0 && userChoice < enums.length){
+                    return enums[userChoice];
+                }
+                MainView.wrongInputDataMessage();
+            } catch (NumberFormatException e){
+                MainView.wrongInputDataMessage();
+            }
+        }
     }
 
     private BigDecimal inputSalaryFundWithScanner(Locale locale){
@@ -42,50 +87,31 @@ public class MainController {
             MainView.printMessageById(TextConstants.SPECIFY_SALARY_FUND);
             String userInput = scanner.nextLine();
             try {
-                return (BigDecimal) df.parseObject(userInput);
+                BigDecimal bd = ((BigDecimal) df.parseObject(userInput)).setScale(2, RoundingMode.DOWN);
+                if(bd.compareTo(BigDecimal.valueOf(0))>=0) {
+                    return bd;
+                }
+                MainView.wrongInputDataMessage();
             } catch (ParseException e) {
                 MainView.wrongInputDataMessage();
             }
         }
     }
 
-    private TextMenuConstant getUserMenuChoice() {
-        TextMenuConstant[] enums=TextMenuConstant.values();
-        while(true) {
-            try {
-                MainView.showActionMenu();
-                int userChoice = Integer.parseInt(scanner.nextLine());
-                if(userChoice >= 0 && userChoice < enums.length){
-                    return enums[userChoice];
-                }
-                throw new NumberFormatException("Wrong number!");
-            } catch (NumberFormatException e){
-                MainView.wrongInputDataMessage();
-            }
-        }
-    }
-
     public void startProcess(){
-        String choose = getStringFromScanner(TextConstants.CHOOSE_LANGUAGE_MESSAGE,RegExpConstants.CHOOSE_LANGUAGE);
-        switch (choose){
-            case "1":
-                Locale locale = new Locale("uk","UA");
-                MainView.changeLocale(locale);
-                break;
-            case "2":
-                MainView.changeLocale(Locale.ENGLISH);
-                break;
-            default:
-
-        }
+        LanguageEnum lang = getUserLanguageChoice();
+        Locale locale = new Locale(lang.getLanguage(),lang.getCountry());
+        MainView.changeLocale(locale);
 
         MainView.printMessageById(TextConstants.GREETINGS_MESSAGE);
 
-        TextMenuConstant userChoice;
-        while((userChoice= getUserMenuChoice())!=TextMenuConstant.OPTION_EXIT){
+        TextMenuEnum userChoice;
+        while((userChoice = getUserMenuChoice())!= TextMenuEnum.OPTION_EXIT) {
             switch (userChoice){
                 case OPTION_SPECIFY_FUND:
                     model.setSalaryFund(inputSalaryFundWithScanner(MainView.getLocale()));
+                    break;
+                case OPTION_SHOW_EMPLOYEES:
                     break;
                 case OPTION_BALANCE_ALLOCATION_TYPE:
                     break;
@@ -93,14 +119,25 @@ public class MainController {
                     break;
                 case OPTION_ADD_EMPLOYEE:
                     break;
+                case OPTION_PAYROLL_PRINT:
+                    break;
             }
+            //MainView.printString(String.valueOf(model));
+            printModelInfo();
         }
 
-
+        MainView.printMessageById(TextConstants.GOODBYE_MESSAGE);
 
 
     }
 
+    private void printModelInfo() {
+        MainView.printString(
+                "[" +
+                model.getSalaryFund() +
+                "]"
+        );
+    }
 
 
 }

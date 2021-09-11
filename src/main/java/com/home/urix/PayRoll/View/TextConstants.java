@@ -5,17 +5,17 @@ public enum TextConstants {
     GREETINGS_MESSAGE("start.greeting.message"),
     CHOOSE_LANGUAGE_MESSAGE("choose.your.language"),
     SPECIFY_SALARY_FUND("specify.salary.fund"),
-    MENU_HEADER("menu.header");
+    MENU_HEADER("menu.header"),
+    GOODBYE_MESSAGE("goodbye.message");
 
 
+    private final String value;
 
-    private final String name;
-
-    TextConstants(String name){
-        this.name=name;
+    TextConstants(String value){
+        this.value = value;
     }
 
     public String value(){
-        return name;
+        return value;
     }
 }
