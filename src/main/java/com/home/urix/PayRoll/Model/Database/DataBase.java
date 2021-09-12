@@ -5,8 +5,8 @@ import com.home.urix.PayRoll.Model.Employee.Employee;
 import java.sql.SQLException;
 
 public interface DataBase {
-    boolean open(String dbName) throws ClassNotFoundException, SQLException;
-    boolean close();
+    void open(String dbName) throws ClassNotFoundException, SQLException;
+    void close() throws SQLException;
     boolean connected() throws SQLException;
     Employee[] getAllEmployees();
     boolean addEmployee(Employee employee);
