@@ -7,7 +7,9 @@ public enum TextConstants {
     SPECIFY_SALARY_FUND("specify.salary.fund"),
     MENU_HEADER("menu.header"),
     MENU_EMPLOYEES_HEADER("menu.employees.header"),
-    GOODBYE_MESSAGE("goodbye.message");
+    GOODBYE_MESSAGE("goodbye.message"),
+    SQL_CONNECT_ERROR_MESSAGE("sql.connect.error"),
+    SQL_DRIVER_NOT_FOUND("sql.driver.not.found");
 
 
     private final String value;

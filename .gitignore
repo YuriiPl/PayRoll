@@ -1,5 +1,7 @@
 target/
 
+payroll.db
+
 # Compiled class file
 *.class
 

@@ -5,6 +5,7 @@ import com.home.urix.PayRoll.View.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -103,6 +104,16 @@ public class MainController {
     }
 
     public void startProcess(){
+        try {
+            model.connectToDatabase("payroll.db");
+        } catch (SQLException e) {
+            MainView.printMessageById(TextConstants.SQL_CONNECT_ERROR_MESSAGE);
+            return;
+        } catch (ClassNotFoundException e) {
+            MainView.printMessageById(TextConstants.SQL_DRIVER_NOT_FOUND);
+            return;
+        }
+
         LanguageEnum lang = getUserLanguageChoice();
         Locale locale = new Locale(lang.getLanguage(),lang.getCountry());
         MainView.changeLocale(locale);
