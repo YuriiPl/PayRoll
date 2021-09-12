@@ -5,18 +5,22 @@ import com.home.urix.PayRoll.Model.AllocationSchema.ApportionmentAllocation;
 import com.home.urix.PayRoll.Model.AllocationSchema.FlatAllocation;
 import com.home.urix.PayRoll.Model.Database.DataBase;
 import com.home.urix.PayRoll.Model.Database.SQLiteDb;
+import com.home.urix.PayRoll.Model.Departments.Department;
 import com.home.urix.PayRoll.Model.Departments.Organization;
+import com.home.urix.PayRoll.Model.Departments.OrganizationStructure;
 import com.home.urix.PayRoll.Model.calculationSchema.DepartmentCalculation;
 import com.home.urix.PayRoll.Model.calculationSchema.OrganizationCalculation;
 import com.home.urix.PayRoll.Model.calculationSchema.CalculationSchema;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Optional;
 
 public class MainModel {
     private final DataBase db;
-    AllocationSchema allocationSchema;
-    CalculationSchema calculationSchema;
-    Organization organization;
+    private AllocationSchema allocationSchema;
+    private CalculationSchema calculationSchema;
+    private final Organization organization;
 
     public MainModel(){
         db = new SQLiteDb();
@@ -33,8 +37,8 @@ public class MainModel {
         allocationSchema.calculate(calculationSchema.getOrganizationStructures());
     }
 
-    public CalculationSchema getCalculationSchema() {
-        return calculationSchema;
+    public OrganizationStructure[] getCurrentModelDepartments(){
+        return calculationSchema.getOrganizationStructures();
     }
 
     public void setFlatBalanceAllocation() {
@@ -55,5 +59,21 @@ public class MainModel {
     public void setOrganizationBalanceAllocation() {
         if(calculationSchema.getClass().getName().equals(OrganizationCalculation.class.getName())) return;
         calculationSchema = new OrganizationCalculation(organization);
+    }
+
+    public void addDepartment(String departmentName){
+        organization.addDepartment(departmentName);
+    }
+
+    public ArrayList<OrganizationStructure> departments(){
+        return organization.departments();
+    }
+
+    public void removeDepartment(int departmentPosition) {
+        organization.removeDepartment(departmentPosition);
+    }
+
+    public void changeDepartmentName(int departmentPosition, String newName) {
+        organization.changeDepartmentName(departmentPosition,newName);
     }
 }

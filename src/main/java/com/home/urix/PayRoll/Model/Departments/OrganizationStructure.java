@@ -26,4 +26,5 @@ public abstract class OrganizationStructure {
     public void setName(String name) {
         this.name = name;
     }
+
 }

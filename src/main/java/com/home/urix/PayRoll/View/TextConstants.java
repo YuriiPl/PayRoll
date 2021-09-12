@@ -12,8 +12,11 @@ public enum TextConstants {
     MENU_EMPLOYEES_HEADER("menu.employees.header"),
     MENU_DEPARTMENTS_HEADER("menu.departments.header"),
     MENU_BALANCE_ALLOCATION_TYPE("balance.allocation.type"),
-    MENU_BALANCE_ALLOCATION_PLACE("balance.allocation.place");
-
+    MENU_BALANCE_ALLOCATION_PLACE("balance.allocation.place"),
+    ENTER_DEPARTMENT_NAME("enter.department.name"),
+    ALREADY_EXISTS("error.already.exists"),
+    DEPARTMENT_NOT_EMPTY("error.department.not.empty"),
+    TEXT_DEPARTMENT_LIST("text.department.list");
 
     private final String value;
 
@@ -24,4 +27,5 @@ public enum TextConstants {
     public String value(){
         return value;
     }
+
 }

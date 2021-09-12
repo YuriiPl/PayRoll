@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -85,6 +86,18 @@ public class MainController {
         }
     }
 
+    private String getStringFromScanner(TextConstants messageResourceBundleId, RegExpConstants regexpResourceBundleId){
+        String currentRegExp = TextFactory.getRegExpString(regexpResourceBundleId);
+        MainView.printMessageById(messageResourceBundleId);
+        String userInput = scanner.nextLine();
+        while(!userInput.matches(currentRegExp)) {
+            MainView.inputWrongDataMessage();
+            MainView.printMessageById(messageResourceBundleId);
+            userInput = scanner.nextLine();
+        }
+        return userInput;
+    }
+
     public void startProcess(){
         try {
             model.connectToDatabase("payroll.db");
@@ -125,13 +138,20 @@ public class MainController {
                     DepartmentsMenuEnum userDepartmentChoice;
                     while((userDepartmentChoice = getDepartmentMenuChoice())!= DepartmentsMenuEnum.OPTION_EXIT) {
                         switch (userDepartmentChoice) {
-                            case OPTION_SHOW_DEPARTMENTS:
-                                break;
                             case OPTION_ADD_DEPARTMENT:
+                                try {
+                                    model.addDepartment(getStringFromScanner(TextConstants.ENTER_DEPARTMENT_NAME, RegExpConstants.REGEX_WORDS_NUMBERS));
+                                } catch (IllegalArgumentException ignored){
+                                    MainView.printMessageById(TextConstants.ALREADY_EXISTS);
+                                }
+                            case OPTION_SHOW_DEPARTMENTS:
+                                printDepartmentsNames();
                                 break;
                             case OPTION_REMOVE_DEPARTMENT:
+                                removeDepartment();
                                 break;
                             case OPTION_EDIT_DEPARTMENT:
+                                editDepartmentName();
                                 break;
                         }
                     }
@@ -160,7 +180,7 @@ public class MainController {
                     break;
                 case OPTION_PAYROLL_PRINT:
                     model.calculate();
-                    for(OrganizationStructure structure : model.getCalculationSchema().getOrganizationStructures()){
+                    for(OrganizationStructure structure : model.getCurrentModelDepartments()){
                         MainView.printString(structure.getName());
                         for(Employee employee: structure.employees()){
                             MainView.printString(String.valueOf(employee));
@@ -174,6 +194,66 @@ public class MainController {
         MainView.printMessageById(TextConstants.GOODBYE_MESSAGE);
 
 
+    }
+
+    private void editDepartmentName() {
+        ArrayList<OrganizationStructure> departments = model.departments();
+        printDepartmentsNames();
+        if(departments.size()==0)return;
+        while(true) {
+            try {
+                String userLine=scanner.nextLine();
+                if(userLine.length()==0)return;
+                int userChoice = Integer.parseInt(userLine);
+                if(userChoice >= 0 && userChoice < departments.size()){
+                    userLine=getStringFromScanner(TextConstants.ENTER_DEPARTMENT_NAME, RegExpConstants.REGEX_WORDS_NUMBERS);
+                    model.changeDepartmentName(userChoice,userLine);
+                    printDepartmentsNames();
+                    return;
+                }
+                MainView.wrongInputDataMessage();
+            } catch (NumberFormatException e){
+                MainView.wrongInputDataMessage();
+            }
+            printDepartmentsNames();
+        }
+    }
+
+    private void printDepartmentsNames() {
+        ArrayList<OrganizationStructure> departments = model.departments();
+        int i=0;
+        StringBuilder listDepts = new StringBuilder(TextFactory.getString(TextConstants.TEXT_DEPARTMENT_LIST));
+        for(OrganizationStructure dep : departments){
+            if(i%5==0)listDepts.append("\n");
+            listDepts.append(i++).append(". ").append(dep.getName()).append(" ");
+        }
+        MainView.printString(listDepts.toString());
+    }
+
+    private void removeDepartment(){
+        ArrayList<OrganizationStructure> departments = model.departments();
+        printDepartmentsNames();
+        if(departments.size()==0)return;
+        while(true) {
+            try {
+                String userLine=scanner.nextLine();
+                if(userLine.length()==0)return;
+                int userChoice = Integer.parseInt(userLine);
+                if(userChoice >= 0 && userChoice < departments.size()){
+                    try {
+                        model.removeDepartment(userChoice);
+                    } catch (RuntimeException ignored){
+                        MainView.printMessageById(TextConstants.DEPARTMENT_NOT_EMPTY);
+                    }
+                    printDepartmentsNames();
+                    return;
+                }
+                MainView.wrongInputDataMessage();
+            } catch (NumberFormatException e){
+                MainView.wrongInputDataMessage();
+            }
+            printDepartmentsNames();
+        }
     }
 
     private void printModelInfo() {

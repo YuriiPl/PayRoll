@@ -9,6 +9,10 @@ public interface MainView {
         System.out.println(TextFactory.getString(id));
     }
 
+    static String getMessageById(TextConstants id){
+        return TextFactory.getString(id);
+    }
+
     static <T extends Enum<T>> void printMenuById(T id){
         System.out.println(id.ordinal()+". "+TextFactory.getMenuString(id));
     }
@@ -69,5 +73,9 @@ public interface MainView {
         for (DepartmentsMenuEnum opt : DepartmentsMenuEnum.values()) {
             MainView.printMenuById(opt);
         }
+    }
+
+    static void inputWrongDataMessage() {
+        System.out.println(TextFactory.getString(TextConstants.WRONG_INPUT_DATA));
     }
 }

@@ -6,6 +6,11 @@ import java.math.BigDecimal;
 import java.util.LinkedList;
 
 public class Department extends OrganizationStructure {
+
+    public Department(String name){
+        setName(name);
+    }
+
     private final LinkedList<Employee> employeesList = new LinkedList<>();
 
     void hireEmployee(Employee employee){
