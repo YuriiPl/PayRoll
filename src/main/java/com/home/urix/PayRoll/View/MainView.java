@@ -50,4 +50,18 @@ public interface MainView {
         }
     }
 
+    static void showBalanceAllocationTypeMenu(){
+        MainView.printMessageById(TextConstants.MENU_BALANCE_ALLOCATION_TYPE);
+        for (BalanceAllocationTypeEnum opt : BalanceAllocationTypeEnum.values()) {
+            MainView.printMenuById(opt);
+        }
+    }
+
+    static void showBalanceAllocationPlaceMenu(){
+        MainView.printMessageById(TextConstants.MENU_BALANCE_ALLOCATION_PLACE);
+        for (BalanceAllocationPlaceEnum opt : BalanceAllocationPlaceEnum.values()) {
+            MainView.printMenuById(opt);
+        }
+    }
+
 }

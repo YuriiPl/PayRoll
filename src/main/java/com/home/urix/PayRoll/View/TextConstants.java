@@ -5,11 +5,13 @@ public enum TextConstants {
     GREETINGS_MESSAGE("start.greeting.message"),
     CHOOSE_LANGUAGE_MESSAGE("choose.your.language"),
     SPECIFY_SALARY_FUND("specify.salary.fund"),
-    MENU_HEADER("menu.header"),
-    MENU_EMPLOYEES_HEADER("menu.employees.header"),
     GOODBYE_MESSAGE("goodbye.message"),
     SQL_CONNECT_ERROR_MESSAGE("sql.connect.error"),
-    SQL_DRIVER_NOT_FOUND("sql.driver.not.found");
+    SQL_DRIVER_NOT_FOUND("sql.driver.not.found"),
+    MENU_HEADER("menu.header"),
+    MENU_EMPLOYEES_HEADER("menu.employees.header"),
+    MENU_BALANCE_ALLOCATION_TYPE("balance.allocation.type"),
+    MENU_BALANCE_ALLOCATION_PLACE("balance.allocation.place");
 
 
     private final String value;

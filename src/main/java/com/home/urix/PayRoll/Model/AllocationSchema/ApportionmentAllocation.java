@@ -1,4 +1,4 @@
-package com.home.urix.PayRoll.Model.AllocationType;
+package com.home.urix.PayRoll.Model.AllocationSchema;
 
 import com.home.urix.PayRoll.Model.Departments.OrganizationStructure;
 import com.home.urix.PayRoll.Model.Employee.Employee;
@@ -7,10 +7,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.LinkedList;
 
-public class ApportionmentAllocation implements AllocationSchemaInterface {
+public class ApportionmentAllocation implements AllocationSchema {
+
     @Override
-    public void calculate(OrganizationStructure department) {
-        LinkedList<Employee> emploees=department.employees();
+    public void calculate(OrganizationStructure[] organizationStructures) {
 
     }
 
@@ -30,4 +30,6 @@ public class ApportionmentAllocation implements AllocationSchemaInterface {
         }
         return result;
     }
+
+
 }

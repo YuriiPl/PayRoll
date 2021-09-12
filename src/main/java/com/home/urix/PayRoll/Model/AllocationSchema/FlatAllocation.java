@@ -1,10 +1,11 @@
-package com.home.urix.PayRoll.Model.AllocationType;
+package com.home.urix.PayRoll.Model.AllocationSchema;
 
 import com.home.urix.PayRoll.Model.Departments.OrganizationStructure;
 
-public class FlatAllocation implements AllocationSchemaInterface {
+public class FlatAllocation implements AllocationSchema {
+
     @Override
-    public void calculate(OrganizationStructure department) {
+    public void calculate(OrganizationStructure[] organizationStructures) {
 
     }
 }

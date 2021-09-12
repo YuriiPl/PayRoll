@@ -1,5 +1,7 @@
 package com.home.urix.PayRoll.Controller;
 
+import com.home.urix.PayRoll.Model.Departments.OrganizationStructure;
+import com.home.urix.PayRoll.Model.Employee.Employee;
 import com.home.urix.PayRoll.Model.MainModel;
 import com.home.urix.PayRoll.View.*;
 
@@ -53,36 +55,12 @@ public class MainController {
         return showEnumMenu(EmployeeMenuEnum.values(),MainView::showEmployeesMenu);
     }
 
-    private LanguageEnum getUserLanguageChoice1(){
-        LanguageEnum[] enums = LanguageEnum.values();
-        while(true) {
-            MainView.showLanguageMenu();
-            try {
-                int userChoice = Integer.parseInt(scanner.nextLine());
-                if(userChoice >= 0 && userChoice < enums.length){
-                    return enums[userChoice];
-                }
-                MainView.wrongInputDataMessage();
-            } catch (NumberFormatException e){
-                MainView.wrongInputDataMessage();
-            }
-        }
+    private BalanceAllocationTypeEnum getBalanceAllocationType(){
+        return showEnumMenu(BalanceAllocationTypeEnum.values(),MainView::showBalanceAllocationTypeMenu);
     }
 
-    private MainMenuEnum getUserMenuChoice1() {
-        MainMenuEnum[] enums= MainMenuEnum.values();
-        while(true) {
-            try {
-                MainView.showActionMenu();
-                int userChoice = Integer.parseInt(scanner.nextLine());
-                if(userChoice >= 0 && userChoice < enums.length){
-                    return enums[userChoice];
-                }
-                MainView.wrongInputDataMessage();
-            } catch (NumberFormatException e){
-                MainView.wrongInputDataMessage();
-            }
-        }
+    private BalanceAllocationPlaceEnum getBalanceAllocationPlace(){
+        return showEnumMenu(BalanceAllocationPlaceEnum.values(),MainView::showBalanceAllocationPlaceMenu);
     }
 
     private BigDecimal inputSalaryFundWithScanner(Locale locale){
@@ -94,7 +72,7 @@ public class MainController {
             try {
                 BigDecimal bd = ((BigDecimal) df.parseObject(userInput)).setScale(2, RoundingMode.DOWN);
                 if(bd.compareTo(BigDecimal.valueOf(0))>=0) {
-                    return bd;
+                    return bd.multiply(BigDecimal.valueOf(100));
                 }
                 MainView.wrongInputDataMessage();
             } catch (ParseException e) {
@@ -124,7 +102,7 @@ public class MainController {
         while((userChoice = getUserMenuChoice())!= MainMenuEnum.OPTION_EXIT) {
             switch (userChoice){
                 case OPTION_SPECIFY_FUND:
-                    model.setSalaryFund(inputSalaryFundWithScanner(MainView.getLocale()));
+                    //model.setSalaryFundCents(inputSalaryFundWithScanner(MainView.getLocale()));
                     break;
                 case OPTION_SHOW_EMPLOYEES_MENU:
                     EmployeeMenuEnum userEmployeeChoice;
@@ -140,13 +118,37 @@ public class MainController {
                     }
                     break;
                 case OPTION_BALANCE_ALLOCATION_TYPE:
+                    switch (getBalanceAllocationType()) {
+                        case FLAT:
+                            model.setFlatBalanceAllocation();
+                            break;
+                        case APPORTIONMENT:
+                            model.setApportionmentBalanceAllocation();
+                            break;
+                        default:
+                    }
                     break;
                 case OPTION_BALANCE_ALLOCATION_PLACE:
+                    switch (getBalanceAllocationPlace()) {
+                        case BY_DEPARTMENT:
+                            model.setDepartmentBalanceAllocation();
+                            break;
+                        case BY_ORGANIZATION:
+                            model.setOrganizationBalanceAllocation();
+                            break;
+                        default:
+                    }
                     break;
                 case OPTION_PAYROLL_PRINT:
+                    model.calculate();
+                    for(OrganizationStructure structure : model.getCalculationSchema().getOrganizationStructures()){
+                        MainView.printString(structure.getName());
+                        for(Employee employee: structure.employees()){
+                            MainView.printString(String.valueOf(employee));
+                        }
+                    }
                     break;
             }
-            //MainView.printString(String.valueOf(model));
             printModelInfo();
         }
 
@@ -158,7 +160,7 @@ public class MainController {
     private void printModelInfo() {
         MainView.printString(
                 "[" +
-                model.getSalaryFund() +
+                //0model.getSalaryFundCents() +
                 "]"
         );
     }

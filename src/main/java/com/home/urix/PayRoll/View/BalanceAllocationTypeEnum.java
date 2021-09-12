@@ -1,6 +1,6 @@
 package com.home.urix.PayRoll.View;
 
-public enum TypeBalanceAllocationEnum {
+public enum BalanceAllocationTypeEnum {
     FLAT,
     APPORTIONMENT,
     OPTION_EXIT;
