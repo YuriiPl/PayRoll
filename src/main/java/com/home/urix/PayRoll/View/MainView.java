@@ -64,4 +64,10 @@ public interface MainView {
         }
     }
 
+    static void showDepartmentMenu() {
+        MainView.printMessageById(TextConstants.MENU_DEPARTMENTS_HEADER);
+        for (DepartmentsMenuEnum opt : DepartmentsMenuEnum.values()) {
+            MainView.printMenuById(opt);
+        }
+    }
 }

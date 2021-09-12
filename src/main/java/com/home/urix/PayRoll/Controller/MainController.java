@@ -55,6 +55,10 @@ public class MainController {
         return showEnumMenu(EmployeeMenuEnum.values(),MainView::showEmployeesMenu);
     }
 
+    private DepartmentsMenuEnum getDepartmentMenuChoice(){
+        return showEnumMenu(DepartmentsMenuEnum.values(),MainView::showDepartmentMenu);
+    }
+
     private BalanceAllocationTypeEnum getBalanceAllocationType(){
         return showEnumMenu(BalanceAllocationTypeEnum.values(),MainView::showBalanceAllocationTypeMenu);
     }
@@ -113,6 +117,21 @@ public class MainController {
                             case OPTION_ADD_EMPLOYEE:
                                 break;
                             case OPTION_FIRE_EMPLOYEE:
+                                break;
+                        }
+                    }
+                    break;
+                case OPTION_DEPARTMENT_MANIPULATION:
+                    DepartmentsMenuEnum userDepartmentChoice;
+                    while((userDepartmentChoice = getDepartmentMenuChoice())!= DepartmentsMenuEnum.OPTION_EXIT) {
+                        switch (userDepartmentChoice) {
+                            case OPTION_SHOW_DEPARTMENTS:
+                                break;
+                            case OPTION_ADD_DEPARTMENT:
+                                break;
+                            case OPTION_REMOVE_DEPARTMENT:
+                                break;
+                            case OPTION_EDIT_DEPARTMENT:
                                 break;
                         }
                     }
