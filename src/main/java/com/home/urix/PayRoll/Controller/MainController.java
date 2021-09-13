@@ -11,9 +11,13 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
+
 
 public class MainController {
     MainView view;
@@ -68,11 +72,12 @@ public class MainController {
         return showEnumMenu(BalanceAllocationPlaceEnum.values(),MainView::showBalanceAllocationPlaceMenu);
     }
 
-    private BigDecimal inputSalaryFundWithScanner(Locale locale){
+    private BigDecimal inputSalaryCentsWithScanner(Locale locale, TextConstants message){
         DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(locale);
         df.setParseBigDecimal(true);
         while(true) {
-            MainView.printMessageById(TextConstants.SPECIFY_SALARY_FUND);
+            //MainView.printMessageById(TextConstants.SPECIFY_SALARY_FUND);
+            MainView.printMessageById(message);
             String userInput = scanner.nextLine();
             try {
                 BigDecimal bd = ((BigDecimal) df.parseObject(userInput)).setScale(2, RoundingMode.DOWN);
@@ -110,8 +115,7 @@ public class MainController {
         }
 
         LanguageEnum lang = getUserLanguageChoice();
-        Locale locale = new Locale(lang.getLanguage(),lang.getCountry());
-        MainView.changeLocale(locale);
+        MainView.changeLocale(new Locale(lang.getLanguage(),lang.getCountry()));
 
         MainView.printMessageById(TextConstants.GREETINGS_MESSAGE);
 
@@ -128,6 +132,7 @@ public class MainController {
                             case OPTION_SHOW_EMPLOYEES:
                                 break;
                             case OPTION_ADD_EMPLOYEE:
+                                addNewEmployee();
                                 break;
                             case OPTION_FIRE_EMPLOYEE:
                                 break;
@@ -194,6 +199,57 @@ public class MainController {
         MainView.printMessageById(TextConstants.GOODBYE_MESSAGE);
 
 
+    }
+
+    private void addNewEmployee() {
+        ArrayList<OrganizationStructure> departments = model.departments();
+        if(departments.size()==0){
+            MainView.printMessageById(TextConstants.ERROR_NO_DEPARTMENTS);
+            return;
+        }
+        printDepartmentsNames();
+        int departmentNumber;
+        while(true) {
+            try {
+                String userLine=scanner.nextLine();
+                if(userLine.length()==0)return;
+                departmentNumber = Integer.parseInt(userLine);
+                if(departmentNumber >= 0 && departmentNumber < departments.size()){
+                    break;
+                }
+                MainView.wrongInputDataMessage();
+            } catch (NumberFormatException e){
+                MainView.wrongInputDataMessage();
+            }
+            printDepartmentsNames();
+        }
+
+        String lastName=getStringFromScanner(TextConstants.EMPLOYEE_ENTER_LAST_NAME, RegExpConstants.REGEXP_NAME);
+        String firstName=getStringFromScanner(TextConstants.EMPLOYEE_ENTER_FIRST_NAME, RegExpConstants.REGEXP_NAME);
+        String midName=getStringFromScanner(TextConstants.EMPLOYEE_ENTER_MIDDLE_NAME, RegExpConstants.REGEXP_NAME_OPT);
+        LocalDate birthDay;
+        LocalDate startDate;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT));
+        while(true) {
+            String stringDate = getStringFromScanner(TextConstants.EMPLOYEE_ENTER_BIRTHDAY, RegExpConstants.REGEXP_DATE);
+            try {
+                birthDay = LocalDate.parse(stringDate, formatter);
+                break;
+            } catch (DateTimeParseException e) {
+                MainView.wrongInputDataMessage();
+            }
+        }
+        while(true) {
+            String stringDate = getStringFromScanner(TextConstants.EMPLOYEE_ENTER_START_DATE, RegExpConstants.REGEXP_DATE);
+            try {
+                startDate = LocalDate.parse(stringDate, formatter);
+                break;
+            } catch (DateTimeParseException e) {
+                MainView.wrongInputDataMessage();
+            }
+        }
+        long salary = inputSalaryCentsWithScanner(MainView.getLocale(),TextConstants.EMPLOYEE_SALARY).longValue();
+        model.addNewEmployee(departmentNumber,firstName,midName,lastName,birthDay,startDate,salary);
     }
 
     private void editDepartmentName() {

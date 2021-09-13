@@ -1,6 +1,7 @@
 package com.home.urix.PayRoll.Model.Departments;
 import com.home.urix.PayRoll.Model.Employee.Employee;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Optional;
@@ -35,6 +36,11 @@ public class Organization  extends OrganizationStructure {
     public void changeDepartmentName(int pos, String newName){
         departments.get(pos).setName(newName);
     }
+
+    public void addNewEmployee(int departmentNumber, String firstName, String midName, String lastName, LocalDate birthDay, LocalDate startDate, long salary){
+        ((Department)departments.get(departmentNumber)).addNewEmployee(firstName, midName, lastName, birthDay, startDate, salary);
+    }
+
 
     @Override
     public LinkedList<Employee> employees() {

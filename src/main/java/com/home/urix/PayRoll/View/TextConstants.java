@@ -16,14 +16,21 @@ public enum TextConstants {
     ENTER_DEPARTMENT_NAME("enter.department.name"),
     ALREADY_EXISTS("error.already.exists"),
     DEPARTMENT_NOT_EMPTY("error.department.not.empty"),
-    TEXT_DEPARTMENT_LIST("text.department.list");
+    TEXT_DEPARTMENT_LIST("text.department.list"),
+    EMPLOYEE_ENTER_FIRST_NAME("employee.enter.first.name"),
+    EMPLOYEE_ENTER_LAST_NAME("employee.enter.last.name"),
+    EMPLOYEE_ENTER_MIDDLE_NAME("employee.enter.middle.name"),
+    EMPLOYEE_ENTER_BIRTHDAY("employee.enter.birthday"),
+    EMPLOYEE_ENTER_START_DATE("employee.enter.start.date"),
+    EMPLOYEE_SALARY("employee.specify.salary"),
+    DATE_FORMAT("date.format"),
+    ERROR_NO_DEPARTMENTS("error.no.departments");
+
 
     private final String value;
-
     TextConstants(String value){
         this.value = value;
     }
-
     public String value(){
         return value;
     }

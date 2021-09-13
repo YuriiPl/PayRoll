@@ -13,6 +13,7 @@ import com.home.urix.PayRoll.Model.calculationSchema.OrganizationCalculation;
 import com.home.urix.PayRoll.Model.calculationSchema.CalculationSchema;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -65,6 +66,7 @@ public class MainModel {
         organization.addDepartment(departmentName);
     }
 
+    //not good
     public ArrayList<OrganizationStructure> departments(){
         return organization.departments();
     }
@@ -75,5 +77,9 @@ public class MainModel {
 
     public void changeDepartmentName(int departmentPosition, String newName) {
         organization.changeDepartmentName(departmentPosition,newName);
+    }
+
+    public void addNewEmployee(int departmentNumber, String firstName, String midName, String lastName, LocalDate birthDay, LocalDate startDate, long salary) {
+        organization.addNewEmployee(departmentNumber,firstName,midName,lastName,birthDay,startDate,salary);
     }
 }
