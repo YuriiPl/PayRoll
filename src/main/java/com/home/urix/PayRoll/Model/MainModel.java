@@ -5,9 +5,9 @@ import com.home.urix.PayRoll.Model.AllocationSchema.ApportionmentAllocation;
 import com.home.urix.PayRoll.Model.AllocationSchema.FlatAllocation;
 import com.home.urix.PayRoll.Model.Database.DataBase;
 import com.home.urix.PayRoll.Model.Database.SQLiteDb;
-import com.home.urix.PayRoll.Model.Departments.Department;
 import com.home.urix.PayRoll.Model.Departments.Organization;
 import com.home.urix.PayRoll.Model.Departments.OrganizationStructure;
+import com.home.urix.PayRoll.Model.Employee.Employee;
 import com.home.urix.PayRoll.Model.calculationSchema.DepartmentCalculation;
 import com.home.urix.PayRoll.Model.calculationSchema.OrganizationCalculation;
 import com.home.urix.PayRoll.Model.calculationSchema.CalculationSchema;
@@ -15,7 +15,7 @@ import com.home.urix.PayRoll.Model.calculationSchema.CalculationSchema;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Optional;
+import java.util.LinkedList;
 
 public class MainModel {
     private final DataBase db;
@@ -66,7 +66,6 @@ public class MainModel {
         organization.addDepartment(departmentName);
     }
 
-    //not good
     public ArrayList<OrganizationStructure> departments(){
         return organization.departments();
     }
@@ -81,5 +80,9 @@ public class MainModel {
 
     public void addNewEmployee(int departmentNumber, String firstName, String midName, String lastName, LocalDate birthDay, LocalDate startDate, long salary) {
         organization.addNewEmployee(departmentNumber,firstName,midName,lastName,birthDay,startDate,salary);
+    }
+
+    public LinkedList<Employee> allUsers(){
+        return organization.employees();
     }
 }

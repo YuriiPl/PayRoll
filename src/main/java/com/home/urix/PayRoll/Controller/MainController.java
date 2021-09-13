@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -130,6 +131,7 @@ public class MainController {
                     while((userEmployeeChoice = getEmployeeMenuChoice())!= EmployeeMenuEnum.OPTION_EXIT) {
                         switch (userEmployeeChoice) {
                             case OPTION_SHOW_EMPLOYEES:
+                                showEmployees();
                                 break;
                             case OPTION_ADD_EMPLOYEE:
                                 addNewEmployee();
@@ -199,6 +201,13 @@ public class MainController {
         MainView.printMessageById(TextConstants.GOODBYE_MESSAGE);
 
 
+    }
+
+    private void showEmployees() {
+        LinkedList<Employee> allUsers = model.allUsers();
+        for (Employee user :allUsers){
+            MainView.printString(user.toString());
+        }
     }
 
     private void addNewEmployee() {

@@ -9,7 +9,7 @@ public class Employee {
     private LocalDate birthDay;
     private LocalDate hiringDate;
     private long salary;
-    private long bonus;
+    private long cacheBonus;
 
     public Employee(String firstName, String midName, String lastName, LocalDate birthDay, LocalDate hiringDate, long salary) {
         this.firstName = firstName;
@@ -18,6 +18,7 @@ public class Employee {
         this.birthDay = birthDay;
         this.hiringDate = hiringDate;
         this.salary = salary;
+        cacheBonus=0;
     }
 
     public long getId() {
@@ -65,11 +66,11 @@ public class Employee {
     }
 
     public long getBonus() {
-        return bonus;
+        return cacheBonus;
     }
 
     public void setBonus(long bonus) {
-        this.bonus = bonus;
+        this.cacheBonus = bonus;
     }
 
     public LocalDate getBirthDay() {
@@ -90,15 +91,13 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
+        return  "{ firstName='" + firstName + '\'' +
                 ", midName='" + midName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthDay=" + birthDay +
                 ", hiringDate=" + hiringDate +
-                ", salary=" + salary +
-                ", bonus=" + bonus +
-                '}';
+                ", salary=" + ((float)salary)/100 +
+                ", bonus=" + cacheBonus +
+                " }";
     }
 }
