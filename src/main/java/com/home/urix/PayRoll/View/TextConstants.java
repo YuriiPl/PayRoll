@@ -16,6 +16,7 @@ public enum TextConstants {
     ENTER_DEPARTMENT_NAME("enter.department.name"),
     ALREADY_EXISTS("error.already.exists"),
     DEPARTMENT_NOT_EMPTY("error.department.not.empty"),
+    DEPARTMENT_IS_EMPTY("department.is.empty"),
     TEXT_DEPARTMENT_LIST("text.department.list"),
     EMPLOYEE_ENTER_FIRST_NAME("employee.enter.first.name"),
     EMPLOYEE_ENTER_LAST_NAME("employee.enter.last.name"),
@@ -24,6 +25,8 @@ public enum TextConstants {
     EMPLOYEE_ENTER_START_DATE("employee.enter.start.date"),
     EMPLOYEE_SALARY("employee.specify.salary"),
     DATE_FORMAT("date.format"),
+    //CHOOSE_DEPARTMENT("choose.department"),
+    CHOOSE_NUMBER_TO_REMOVE_USER("choose.number.to.remove"),
     ERROR_NO_DEPARTMENTS("error.no.departments");
 
 

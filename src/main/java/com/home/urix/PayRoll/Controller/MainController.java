@@ -1,5 +1,6 @@
 package com.home.urix.PayRoll.Controller;
 
+import com.home.urix.PayRoll.Model.Departments.Department;
 import com.home.urix.PayRoll.Model.Departments.OrganizationStructure;
 import com.home.urix.PayRoll.Model.Employee.Employee;
 import com.home.urix.PayRoll.Model.MainModel;
@@ -137,6 +138,9 @@ public class MainController {
                                 addNewEmployee();
                                 break;
                             case OPTION_FIRE_EMPLOYEE:
+                                fireAnEmployee();
+                                break;
+                            case OPTION_EDIT_EMPLOYEE:
                                 break;
                         }
                     }
@@ -203,36 +207,52 @@ public class MainController {
 
     }
 
-    private void showEmployees() {
-        LinkedList<Employee> allUsers = model.allUsers();
-        for (Employee user :allUsers){
+    private void fireAnEmployee() {
+        //printDepartmentsNames();
+        //MainView.printMessageById(TextConstants.CHOOSE_DEPARTMENT);
+        Department department = (Department) model.departments().get(getDepartmentPosition());
+        if(department.employees().size()==0){
+            MainView.printMessageById(TextConstants.DEPARTMENT_IS_EMPTY);
+            return;
+        }
+        MainView.printMessageById(TextConstants.CHOOSE_NUMBER_TO_REMOVE_USER);
+        for(Employee user : department.employees()){
             MainView.printString(user.toString());
+        }
+        while(true) {
+            try {
+                int userChoice = Integer.parseInt(scanner.nextLine());
+                if (userChoice >= 0 && userChoice < department.employees().size()) {
+                    department.fireEmployee(userChoice);
+                    break;
+                }
+                MainView.wrongInputDataMessage();
+            } catch (NumberFormatException e) {
+                MainView.wrongInputDataMessage();
+            }
+        }
+    }
+
+    private void showEmployees() {
+        ArrayList<OrganizationStructure> structs = model.departments();
+        for (OrganizationStructure struct :structs){
+            Department department = (Department)struct;
+            MainView.printString(department.getName());
+            if(department.employees().size()==0){
+                MainView.printMessageById(TextConstants.DEPARTMENT_IS_EMPTY);
+            }
+            for(Employee user : department.employees()){
+                MainView.printString(user.toString());
+            }
         }
     }
 
     private void addNewEmployee() {
-        ArrayList<OrganizationStructure> departments = model.departments();
-        if(departments.size()==0){
+        if(model.departments().size()==0){
             MainView.printMessageById(TextConstants.ERROR_NO_DEPARTMENTS);
             return;
         }
-        printDepartmentsNames();
-        int departmentNumber;
-        while(true) {
-            try {
-                String userLine=scanner.nextLine();
-                if(userLine.length()==0)return;
-                departmentNumber = Integer.parseInt(userLine);
-                if(departmentNumber >= 0 && departmentNumber < departments.size()){
-                    break;
-                }
-                MainView.wrongInputDataMessage();
-            } catch (NumberFormatException e){
-                MainView.wrongInputDataMessage();
-            }
-            printDepartmentsNames();
-        }
-
+        int departmentNumber=getDepartmentPosition();
         String lastName=getStringFromScanner(TextConstants.EMPLOYEE_ENTER_LAST_NAME, RegExpConstants.REGEXP_NAME);
         String firstName=getStringFromScanner(TextConstants.EMPLOYEE_ENTER_FIRST_NAME, RegExpConstants.REGEXP_NAME);
         String midName=getStringFromScanner(TextConstants.EMPLOYEE_ENTER_MIDDLE_NAME, RegExpConstants.REGEXP_NAME_OPT);
@@ -259,6 +279,27 @@ public class MainController {
         }
         long salary = inputSalaryCentsWithScanner(MainView.getLocale(),TextConstants.EMPLOYEE_SALARY).longValue();
         model.addNewEmployee(departmentNumber,firstName,midName,lastName,birthDay,startDate,salary);
+    }
+
+    private int getDepartmentPosition() {
+        ArrayList<OrganizationStructure> departments = model.departments();
+        int departmentNumber;
+        printDepartmentsNames();
+        while(true) {
+            try {
+                String userLine=scanner.nextLine();
+                //if(userLine.length()==0)return;
+                departmentNumber = Integer.parseInt(userLine);
+                if(departmentNumber >= 0 && departmentNumber < departments.size()){
+                    break;
+                }
+                MainView.wrongInputDataMessage();
+            } catch (NumberFormatException e){
+                MainView.wrongInputDataMessage();
+            }
+            printDepartmentsNames();
+        }
+        return departmentNumber;
     }
 
     private void editDepartmentName() {

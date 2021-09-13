@@ -26,8 +26,12 @@ public class Department extends OrganizationStructure {
 //        employeesList.add(employee);
 //    }
 
-    void fireEmployee(Employee employee){
+    public void fireEmployee(Employee employee){
         employeesList.remove(employee);
+    }
+
+    public void fireEmployee(int pos){
+        employeesList.remove(pos);
     }
 
     @Override
