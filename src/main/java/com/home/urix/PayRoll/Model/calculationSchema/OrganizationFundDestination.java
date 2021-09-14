@@ -3,14 +3,19 @@ package com.home.urix.PayRoll.Model.calculationSchema;
 import com.home.urix.PayRoll.Model.Departments.Organization;
 import com.home.urix.PayRoll.Model.Departments.OrganizationStructure;
 
-public class OrganizationCalculation implements CalculationSchema {
+public class OrganizationFundDestination implements FundDestinationSchema {
     Organization organization;
-    public OrganizationCalculation(Organization organization){
+    public OrganizationFundDestination(Organization organization){
         this.organization=organization;
     }
 
     @Override
     public OrganizationStructure[] getOrganizationStructures() {
         return new OrganizationStructure[]{organization};
+    }
+
+    @Override
+    public FundDestinationType type() {
+        return FundDestinationType.ORGANIZATION;
     }
 }

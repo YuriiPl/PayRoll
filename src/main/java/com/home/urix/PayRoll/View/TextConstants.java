@@ -4,7 +4,6 @@ public enum TextConstants {
     WRONG_INPUT_DATA("input.string.data.wrong"),
     GREETINGS_MESSAGE("start.greeting.message"),
     CHOOSE_LANGUAGE_MESSAGE("choose.your.language"),
-    SPECIFY_SALARY_FUND("specify.salary.fund"),
     GOODBYE_MESSAGE("goodbye.message"),
     SQL_CONNECT_ERROR_MESSAGE("sql.connect.error"),
     SQL_DRIVER_NOT_FOUND("sql.driver.not.found"),
@@ -29,8 +28,11 @@ public enum TextConstants {
     CHOOSE_DEPARTMENT("choose.department"),
     CHOOSE_NUMBER_FOR_REMOVING_USER("choose.number.to.remove.user"),
     CHOOSE_NUMBER_FOR_EDITING_USER("choose.number.to.edit.user"),
-    ERROR_NO_DEPARTMENTS("error.no.departments");
-
+    ERROR_NO_DEPARTMENTS("error.no.departments"),
+    SPECIFY_SALARY_FUND("specify.salary.fund"),
+    ERROR_SMALL_SALARY_FUND("small.salary.fund"),
+    SPECIFY_SALARY_FUND_FOR("specify.salary.fund.for"),
+    FOR_MODEL_INFO("model.info.format");
 
     private final String value;
     TextConstants(String value){

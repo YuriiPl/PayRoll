@@ -1,6 +1,6 @@
 package com.home.urix.PayRoll.Controller;
 
-import com.home.urix.PayRoll.Main;
+import com.home.urix.PayRoll.Model.AllocationSchema.AllocationException;
 import com.home.urix.PayRoll.Model.Departments.Department;
 import com.home.urix.PayRoll.Model.Departments.OrganizationStructure;
 import com.home.urix.PayRoll.Model.Employee.Employee;
@@ -55,7 +55,8 @@ public class MainController {
     }
 
     private MainMenuEnum getUserMenuChoice(){
-        return getIntFromEnumMenu(MainMenuEnum.values(),TextConstants.CHOOSE_LANGUAGE_MESSAGE);
+        printModelInfo();
+        return getIntFromEnumMenu(MainMenuEnum.values(),TextConstants.MENU_HEADER);
     }
 
     private EmployeeMenuEnum getEmployeeMenuChoice(){
@@ -79,12 +80,11 @@ public class MainController {
         return getIntFromEnumMenu(EmployeeEditMenuEnum.values(),TextConstants.MENU_EMPLOYEE_EDIT_CHOICE);
     }
 
-    private BigDecimal inputSalaryCentsWithScanner(Locale locale, TextConstants message){
+    private BigDecimal inputSalaryCentsWithScanner(Locale locale, TextConstants message,String ... vars){
         DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(locale);
         df.setParseBigDecimal(true);
         while(true) {
-            //MainView.printMessageById(TextConstants.SPECIFY_SALARY_FUND);
-            MainView.printMessageById(message);
+            MainView.printString(String.format(MainView.getMessageById(message), vars));
             String userInput = scanner.nextLine();
             try {
                 BigDecimal bd = ((BigDecimal) df.parseObject(userInput)).setScale(2, RoundingMode.DOWN);
@@ -193,7 +193,12 @@ public class MainController {
                     }
                     break;
                 case OPTION_PAYROLL_PRINT:
-                    model.calculate();
+                    try {
+                        model.calculate();
+                    } catch (AllocationException e){
+                        MainView.printMessageById(TextConstants.ERROR_SMALL_SALARY_FUND);
+                        break;
+                    }
                     for(OrganizationStructure structure : model.getCurrentModelDepartments()){
                         MainView.printString(structure.getName());
                         for(Employee employee: structure.employees()){
@@ -202,7 +207,6 @@ public class MainController {
                     }
                     break;
             }
-            printModelInfo();
         }
 
         MainView.printMessageById(TextConstants.GOODBYE_MESSAGE);
@@ -211,8 +215,16 @@ public class MainController {
     }
 
     private void specifyFund() {
-        MainView.printString("NOT IMPLEMENTED MainController specifyFund");
+        //MainView.printString("NOT IMPLEMENTED MainController specifyFund");
         //model.setSalaryFundCents(inputSalaryFundWithScanner(MainView.getLocale()));
+        for(OrganizationStructure structure : model.getCurrentModelDepartments()){
+            String name=structure.getName();
+            if(name.length()>0) {
+                structure.setFundAmount(inputSalaryCentsWithScanner(MainView.getLocale(),TextConstants.SPECIFY_SALARY_FUND_FOR, name));
+            } else {
+                structure.setFundAmount(inputSalaryCentsWithScanner(MainView.getLocale(),TextConstants.SPECIFY_SALARY_FUND));
+            }
+        }
 
     }
 
@@ -273,7 +285,7 @@ public class MainController {
                 ", lastName='" + user.getLastName() + '\'' +
                 ", birthDay=" + user.getBirthDay().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT))) +
                 ", hiringDate=" + user.getHiringDate().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT))) +
-                ", salary=" + ((double) user.getSalary()) / 100 + ", bonus=" + user.getCacheBonus() + " }";
+                ", salary=" + ((double) user.getSalary()) / 100 + ", bonus=" + ((double)user.getCacheBonus()/100) + " }";
     }
 
     private void addNewEmployee() {
@@ -463,11 +475,20 @@ public class MainController {
     }
 
     private void printModelInfo() {
-        MainView.printString(
-                "[" +
-                //0model.getSalaryFundCents() +
-                "]"
-        );
+//        MainView.printString(
+//                "[" +
+//                        " Departments:"+model.departments().size()+
+//                        ", Count of employees:"+model.countOfEmployees()+
+//                        ", Balance allocation: "+model.fundAllocationSchemaType()+
+//                        " "+model.fundDestinationSchemaType()+
+//                " ]"
+//        );
+        MainView.printString(String.format(MainView.getMessageById(TextConstants.FOR_MODEL_INFO),
+                model.departments().size(),
+                model.countOfEmployees(),
+                model.fundAllocationSchemaType(),
+                model.fundDestinationSchemaType()
+                ));
     }
 
 
