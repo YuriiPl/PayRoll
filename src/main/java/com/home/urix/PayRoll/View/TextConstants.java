@@ -32,7 +32,8 @@ public enum TextConstants {
     SPECIFY_SALARY_FUND("specify.salary.fund"),
     ERROR_SMALL_SALARY_FUND("small.salary.fund"),
     SPECIFY_SALARY_FUND_FOR("specify.salary.fund.for"),
-    FOR_MODEL_INFO("model.info.format");
+    FOR_MODEL_INFO("format.model.info"),
+    EMPLOYEE_TO_STRING("format.employee.to.string");
 
     private final String value;
     TextConstants(String value){

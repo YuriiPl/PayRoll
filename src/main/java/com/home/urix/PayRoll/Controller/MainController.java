@@ -215,8 +215,6 @@ public class MainController {
     }
 
     private void specifyFund() {
-        //MainView.printString("NOT IMPLEMENTED MainController specifyFund");
-        //model.setSalaryFundCents(inputSalaryFundWithScanner(MainView.getLocale()));
         for(OrganizationStructure structure : model.getCurrentModelDepartments()){
             String name=structure.getName();
             if(name.length()>0) {
@@ -280,12 +278,21 @@ public class MainController {
     }
 
     private String employeeToString(Employee user) {
-        return  "{ firstName='" + user.getFirstName() + '\'' +
-                ", midName='" + user.getMidName() + '\'' +
-                ", lastName='" + user.getLastName() + '\'' +
-                ", birthDay=" + user.getBirthDay().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT))) +
-                ", hiringDate=" + user.getHiringDate().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT))) +
-                ", salary=" + ((double) user.getSalary()) / 100 + ", bonus=" + ((double)user.getCacheBonus()/100) + " }";
+        return String.format(MainView.getMessageById(TextConstants.EMPLOYEE_TO_STRING),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getMidName(),
+                user.getBirthDay().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT))),
+                //user.getHiringDate().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT)))
+                ((double) user.getSalary()) / 100,
+                ((double) user.getCacheBonus()/100)
+        );
+//        return  "{ firstName='" + user.getFirstName() + '\'' +
+//                ", midName='" + user.getMidName() + '\'' +
+//                ", lastName='" + user.getLastName() + '\'' +
+//                ", birthDay=" + user.getBirthDay().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT))) +
+//                ", hiringDate=" + user.getHiringDate().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT))) +
+//                ", salary=" + ((double) user.getSalary()) / 100 + ", bonus=" + ((double)user.getCacheBonus()/100) + " }";
     }
 
     private void addNewEmployee() {
