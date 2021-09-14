@@ -19,7 +19,7 @@ public class FlatFundAllocationSchema extends FundAllocationSchema {
         BigDecimal step=fundAmount.divide(BigDecimal.valueOf(employees.size()), 0, RoundingMode.HALF_UP);
         for (Employee employee : employees) {
             R = R.add(step);
-            employee.setBonus((R.subtract(oldR)).longValueExact());
+            employee.setCacheBonus((R.subtract(oldR)).longValueExact());
             oldR = R;
         }
     }

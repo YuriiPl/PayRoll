@@ -6,6 +6,8 @@ import com.home.urix.PayRoll.Model.Database.SQLiteDb;
 import com.home.urix.PayRoll.Model.Departments.Department;
 import com.home.urix.PayRoll.Model.Departments.Organization;
 import com.home.urix.PayRoll.Model.Departments.OrganizationStructure;
+import com.home.urix.PayRoll.Model.Employee.Employee;
+import com.home.urix.PayRoll.Model.Employee.EmployeeType;
 import com.home.urix.PayRoll.Model.calculationSchema.DepartmentFundDestination;
 import com.home.urix.PayRoll.Model.calculationSchema.FundDestinationType;
 import com.home.urix.PayRoll.Model.calculationSchema.OrganizationFundDestination;
@@ -14,6 +16,7 @@ import com.home.urix.PayRoll.Model.calculationSchema.FundDestinationSchema;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class MainModel {
     private final DataBase db;
@@ -76,8 +79,11 @@ public class MainModel {
         organization.changeDepartmentName(departmentPosition,newName);
     }
 
-    public void addNewEmployee(int departmentNumber, String firstName, String midName, String lastName, LocalDate birthDay, LocalDate startDate, long salary) {
-        organization.addNewEmployee(departmentNumber,firstName,midName,lastName,birthDay,startDate,salary);
+    public void addNewEmployee(int departmentNumber, String firstName, String midName, String lastName,
+                               LocalDate birthDay, LocalDate startDate, long salary,
+                               EmployeeType employeeType, String positionName) {
+        organization.addNewEmployee(departmentNumber,firstName,midName,lastName,birthDay,startDate,salary,
+                employeeType,positionName);
     }
 
     public void loadData() {
@@ -126,5 +132,17 @@ public class MainModel {
 
     public FundDestinationType fundDestinationSchemaType() {
         return fundDestinationSchema.type();
+    }
+
+    public void editEmployeesPositionName(int employeeIndex, Department department, String positionName) {
+        organization.editEmployeesPositionName(employeeIndex,department,positionName);
+    }
+
+    public void editEmployeesPositionType(int employeeIndex, Department department, EmployeeType employeeType) {
+        organization.editEmployeesPositionType(employeeIndex,department,employeeType);
+    }
+
+    public LinkedList<Employee> getAllEmployees(){
+        return organization.employees();
     }
 }

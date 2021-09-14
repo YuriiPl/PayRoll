@@ -1,6 +1,7 @@
 package com.home.urix.PayRoll.Model.Departments;
 import com.home.urix.PayRoll.Model.Database.DataBase;
 import com.home.urix.PayRoll.Model.Employee.Employee;
+import com.home.urix.PayRoll.Model.Employee.EmployeeType;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -62,8 +63,8 @@ public class Organization  extends OrganizationStructure {
         }
     }
 
-    public void addNewEmployee(int departmentNumber, String firstName, String midName, String lastName, LocalDate birthDay, LocalDate startDate, long salary){
-        Employee employee = new Employee(firstName,midName,lastName,birthDay,startDate,salary);
+    public void addNewEmployee(int departmentNumber, String firstName, String midName, String lastName, LocalDate birthDay, LocalDate startDate, long salary, EmployeeType employeeType, String positionName){
+        Employee employee = new Employee(firstName,midName,lastName,birthDay,startDate,salary,employeeType,positionName);
         Department department = (Department)departments.get(departmentNumber);
         if(db.addEmployee(employee,department.getId())) {
             department.addNewEmployee(employee);
@@ -135,6 +136,20 @@ public class Organization  extends OrganizationStructure {
         if(db.editEmployeesDepartment(employee.getId(),newDepartmentId)) {
             employee.setDepartmentId(newDepartmentId);
             newDepartment.addNewEmployee(employee);
+        }
+    }
+
+    public void editEmployeesPositionName(int employeeIndex, Department department, String positionName){
+        Employee employee = department.employees().get(employeeIndex);
+        if(db.editEmployeesPositionName(employee.getId(),positionName)) {
+            employee.setPositionName(positionName);
+        }
+    }
+
+    public void editEmployeesPositionType(int employeeIndex, Department department, EmployeeType employeeType){
+        Employee employee = department.employees().get(employeeIndex);
+        if(db.editEmployeesPositionType(employee.getId(),employeeType)) {
+            employee.setPositionType(employeeType);
         }
     }
 

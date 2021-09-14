@@ -4,6 +4,7 @@ import com.home.urix.PayRoll.Model.AllocationSchema.AllocationException;
 import com.home.urix.PayRoll.Model.Departments.Department;
 import com.home.urix.PayRoll.Model.Departments.OrganizationStructure;
 import com.home.urix.PayRoll.Model.Employee.Employee;
+import com.home.urix.PayRoll.Model.Employee.EmployeeType;
 import com.home.urix.PayRoll.Model.MainModel;
 import com.home.urix.PayRoll.View.*;
 
@@ -16,10 +17,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class MainController {
@@ -78,6 +76,10 @@ public class MainController {
     private EmployeeEditMenuEnum getEmployeeEditMenuChoice(Department department, int employeeIndex) {
         MainView.printString(employeeToString(department.employees().get(employeeIndex)));
         return getIntFromEnumMenu(EmployeeEditMenuEnum.values(),TextConstants.MENU_EMPLOYEE_EDIT_CHOICE);
+    }
+
+    private EmployeeType getEmployeeType(){
+        return getIntFromEnumMenu(EmployeeType.values(),TextConstants.MENU_EMPLOYEE_POSITION_TYPE);
     }
 
     private BigDecimal inputSalaryCentsWithScanner(Locale locale, TextConstants message,String ... vars){
@@ -139,6 +141,12 @@ public class MainController {
                         switch (userEmployeeChoice) {
                             case OPTION_SHOW_EMPLOYEES:
                                 showAllEmployees();
+                                break;
+                            case OPTION_SHOW_SORT_BY_LASTNAME:
+                                showAllEmployeesSortByLastName();
+                                break;
+                            case OPTION_SHOW_SORT_BY_START_DATE:
+                                showAllEmployeesSortByStartDate();
                                 break;
                             case OPTION_ADD_EMPLOYEE:
                                 addNewEmployee();
@@ -214,6 +222,18 @@ public class MainController {
 
     }
 
+    private void showAllEmployeesSortByStartDate() {
+        LinkedList<Employee> employees = model.getAllEmployees();
+        employees.sort(Comparator.comparing(Employee::getHiringDate));
+        showEmployees(employees);
+    }
+
+    private void showAllEmployeesSortByLastName() {
+        LinkedList<Employee> employees = model.getAllEmployees();
+        employees.sort(Comparator.comparing(Employee::getLastName));
+        showEmployees(employees);
+    }
+
     private void specifyFund() {
         for(OrganizationStructure structure : model.getCurrentModelDepartments()){
             String name=structure.getName();
@@ -283,6 +303,8 @@ public class MainController {
                 user.getLastName(),
                 user.getMidName(),
                 user.getBirthDay().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT))),
+                user.getPositionType(),
+                user.getPositionName(),
                 //user.getHiringDate().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT)))
                 ((double) user.getSalary()) / 100,
                 ((double) user.getCacheBonus()/100)
@@ -327,7 +349,9 @@ public class MainController {
             }
         }
         long salary = inputSalaryCentsWithScanner(MainView.getLocale(),TextConstants.EMPLOYEE_SALARY).longValue();
-        model.addNewEmployee(departmentNumber,firstName,midName,lastName,birthDay,startDate,salary);
+        EmployeeType employeeType = getEmployeeType();
+        String positionName=getStringFromScanner(TextConstants.EMPLOYEE_ENTER_POSITION_NAME, RegExpConstants.REGEX_WORDS_NUMBERS);
+        model.addNewEmployee(departmentNumber,firstName,midName,lastName,birthDay,startDate,salary,employeeType,positionName);
     }
 
     private void editEmployeeData() {
@@ -398,6 +422,16 @@ public class MainController {
                         int departmentNumber=getDepartmentPosition();
                         model.editEmployeesDepartment(employeeIndex, department, departmentNumber);
                         return;
+                case OPTION_POSITION_TYPE:
+                    EmployeeType employeeType = getEmployeeType();
+                    model.editEmployeesPositionType(employeeIndex,department,employeeType);
+                    break;
+                case OPTION_POSITION_NAME:
+                    String positionName=getStringFromScanner(TextConstants.EMPLOYEE_ENTER_POSITION_NAME, RegExpConstants.REGEX_WORDS_NUMBERS);
+                    model.editEmployeesPositionName(employeeIndex,department,positionName);
+
+
+                    break;
             }
         }
     }

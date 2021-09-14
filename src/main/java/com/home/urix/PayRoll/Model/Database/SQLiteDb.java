@@ -2,6 +2,7 @@ package com.home.urix.PayRoll.Model.Database;
 
 import com.home.urix.PayRoll.Model.Departments.Department;
 import com.home.urix.PayRoll.Model.Employee.Employee;
+import com.home.urix.PayRoll.Model.Employee.EmployeeType;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -17,8 +18,7 @@ public class SQLiteDb implements DataBase {
     private static final String REMOVE_DEPARTMENT = "DELETE FROM Department WHERE id=?";
     private static final String EDIT_DEPARTMENT_NAME = "UPDATE Department SET Name=? WHERE id=?";
     private static final String FIRE_EMPLOYEE = "DELETE FROM Employee WHERE id=?";
-    private static final String INSERT_INTO_EMPLOYEE = "INSERT INTO Employee (FirstName, LastName, MidName, BirthDay, HiringDay, Payment, DepartmentId) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
-    private static final String REMOVE_EMPLOYEE="DELETE FROM Employee WHERE id=?";
+    private static final String INSERT_INTO_EMPLOYEE = "INSERT INTO Employee (FirstName, LastName, MidName, BirthDay, HiringDay, Payment, DepartmentId,PositionType,PositionName) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String EDIT_EMPLOYEES_FIRSTNAME="UPDATE Employee SET FirstName=? WHERE id=?";
     private static final String EDIT_EMPLOYEES_MIDDLE_NAME="UPDATE Employee SET MidName=? WHERE id=?";
     private static final String EDIT_EMPLOYEES_LASTNAME="UPDATE Employee SET LastName=? WHERE id=?";
@@ -26,6 +26,8 @@ public class SQLiteDb implements DataBase {
     private static final String EDIT_EMPLOYEES_HIRING_DAY ="UPDATE Employee SET HiringDay=? WHERE id=?";
     private static final String EDIT_EMPLOYEES_PAYMENT ="UPDATE Employee SET Payment=? WHERE id=?";
     private static final String EDIT_EMPLOYEES_DEPARTMENT ="UPDATE Employee SET DepartmentId=? WHERE id=?";
+    private static final String EDIT_EMPLOYEES_POSITION_NAME = "UPDATE Employee SET PositionName=? WHERE id=?";
+    private static final String EDIT_EMPLOYEES_POSITION_TYPE = "UPDATE Employee SET PositionType=? WHERE id=?";
 
     @Override
     public void open(String dbName) throws ClassNotFoundException, SQLException {
@@ -69,7 +71,7 @@ public class SQLiteDb implements DataBase {
                 Employee d = new Employee(rs.getString("FirstName"),rs.getString("MidName"),rs.getString("LastName"),
                         LocalDate.parse(rs.getString("BirthDay"), DateTimeFormatter.ofPattern("MM-dd-yyyy")),
                         LocalDate.parse(rs.getString("HiringDay"), DateTimeFormatter.ofPattern("MM-dd-yyyy")),
-                        rs.getLong("Payment"));
+                        rs.getLong("Payment"), EmployeeType.typeFromInt(rs.getInt("PositionType")),rs.getString("PositionName"));
                 d.setId(rs.getInt("id"));
                 d.setDepartmentId(rs.getLong("DepartmentId"));
                 employees[i++]=d;
@@ -199,8 +201,18 @@ public class SQLiteDb implements DataBase {
 
 
     @Override
-    public boolean editEmployeesFirstName(long employeesId, String firstName) {
-        return updateDbStringDataById(EDIT_EMPLOYEES_FIRSTNAME,employeesId,firstName);
+    public boolean editEmployeesFirstName(long id, String firstName) {
+        return updateDbStringDataById(EDIT_EMPLOYEES_FIRSTNAME,id,firstName);
+    }
+
+    @Override
+    public boolean editEmployeesPositionName(long id, String positionName) {
+        return updateDbStringDataById(EDIT_EMPLOYEES_POSITION_NAME,id,positionName);
+    }
+
+    @Override
+    public boolean editEmployeesPositionType(long id, EmployeeType employeeType) {
+        return updateDbLongDataById(EDIT_EMPLOYEES_POSITION_TYPE,id,employeeType.value());
     }
 
     @Override
@@ -247,6 +259,8 @@ public class SQLiteDb implements DataBase {
             statement.setString(5, employee.getHiringDate().format(DateTimeFormatter.ofPattern("MM-dd-yyyy")));
             statement.setLong(6, employee.getSalary());
             statement.setLong(7, departmentId);
+            statement.setInt(8,employee.getPositionType().value());
+            statement.setString(9,employee.getPositionName());
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Creating user failed, no rows affected.");
@@ -267,20 +281,6 @@ public class SQLiteDb implements DataBase {
         return true;
     }
 
-    @Override
-    public boolean removeEmployee(Employee employee) {
-        try(
-                PreparedStatement statement = connection.prepareStatement(REMOVE_EMPLOYEE,Statement.RETURN_GENERATED_KEYS)
-        ) {
-            statement.setLong(1, employee.getId());
-            int affectedRows = statement.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("Deleting failed, no rows affected.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
+
 
 }

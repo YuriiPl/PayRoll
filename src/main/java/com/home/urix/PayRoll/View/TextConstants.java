@@ -13,6 +13,7 @@ public enum TextConstants {
     MENU_BALANCE_ALLOCATION_TYPE("balance.allocation.type"),
     MENU_BALANCE_ALLOCATION_PLACE("balance.allocation.place"),
     MENU_EMPLOYEE_EDIT_CHOICE("menu.employee.edit"),
+    MENU_EMPLOYEE_POSITION_TYPE("menu.employee.position.type"),
     ENTER_DEPARTMENT_NAME("enter.department.name"),
     ALREADY_EXISTS("error.already.exists"),
     DEPARTMENT_NOT_EMPTY("error.department.not.empty"),
@@ -23,6 +24,7 @@ public enum TextConstants {
     EMPLOYEE_ENTER_MIDDLE_NAME("employee.enter.middle.name"),
     EMPLOYEE_ENTER_BIRTHDAY("employee.enter.birthday"),
     EMPLOYEE_ENTER_START_DATE("employee.enter.start.date"),
+    EMPLOYEE_ENTER_POSITION_NAME("employee.enter.position.name"),
     EMPLOYEE_SALARY("employee.specify.salary"),
     DATE_FORMAT("date.format"),
     CHOOSE_DEPARTMENT("choose.department"),
@@ -33,7 +35,8 @@ public enum TextConstants {
     ERROR_SMALL_SALARY_FUND("small.salary.fund"),
     SPECIFY_SALARY_FUND_FOR("specify.salary.fund.for"),
     FOR_MODEL_INFO("format.model.info"),
-    EMPLOYEE_TO_STRING("format.employee.to.string");
+    EMPLOYEE_TO_STRING("format.employee.to.string"),
+    YOU_CANT_DO_THIS("error.no.permissions");
 
     private final String value;
     TextConstants(String value){

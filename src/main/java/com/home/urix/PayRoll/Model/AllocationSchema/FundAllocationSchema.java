@@ -18,9 +18,9 @@ public abstract class FundAllocationSchema {
             for (Employee e : employees) {
                 salarySum = salarySum.add(BigDecimal.valueOf(e.getSalary()));
                 if(e.getBirthDay().getMonth().equals(LocalDate.now().getMonth())){
-                    e.setBonus(e.getSalary()/10);
+                    e.setCacheBonus(e.getSalary()/10);
                 } else {
-                    e.setBonus(0);
+                    e.setCacheBonus(0);
                 }
             }
             if(salarySum.compareTo(fundAmount)>=0){

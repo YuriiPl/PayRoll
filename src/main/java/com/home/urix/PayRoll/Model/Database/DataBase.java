@@ -3,6 +3,7 @@ package com.home.urix.PayRoll.Model.Database;
 import com.home.urix.PayRoll.Model.Departments.Department;
 import com.home.urix.PayRoll.Model.Departments.OrganizationStructure;
 import com.home.urix.PayRoll.Model.Employee.Employee;
+import com.home.urix.PayRoll.Model.Employee.EmployeeType;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -14,7 +15,6 @@ public interface DataBase {
     Employee[] getAllEmployees();
 
     boolean addEmployee(Employee employee, long departmentId);
-    boolean removeEmployee(Employee employee);
 
     Integer employeesCount();
     Department[] getAllDepartments();
@@ -41,5 +41,8 @@ public interface DataBase {
 
     boolean changeDepartmentName(long id, String newName);
 
+    boolean editEmployeesPositionName(long id, String positionName);
+
+    boolean editEmployeesPositionType(long id, EmployeeType employeeType);
 }
 

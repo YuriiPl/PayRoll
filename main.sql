@@ -16,13 +16,19 @@ CREATE TABLE "Employee" (
   "HiringDay" TEXT NOT NULL,
   "Payment" integer NOT NULL,
   "DepartmentId" INTEGER NOT NULL,
-  FOREIGN KEY ("DepartmentId") REFERENCES "Department" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+  "PositionType" integer NOT NULL,
+  "PositionName" TEXT NOT NULL,
+  "ManagerId" INTEGER DEFAULT NULL,
+  FOREIGN KEY ("DepartmentId") REFERENCES "Department" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT "PositionType" CHECK (PositionType IN (1,2,4))
 );
+
 
 CREATE UNIQUE INDEX "name"
 ON "Department" (
   "name" ASC
 );
+
 
 CREATE UNIQUE INDEX "person"
 ON "Employee" (

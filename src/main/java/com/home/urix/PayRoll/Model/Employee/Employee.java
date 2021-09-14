@@ -1,6 +1,11 @@
 package com.home.urix.PayRoll.Model.Employee;
 
+import com.home.urix.PayRoll.View.TextConstants;
+import com.home.urix.PayRoll.View.TextFactory;
+
+import java.security.AccessControlException;
 import java.time.LocalDate;
+import java.util.LinkedList;
 
 
 public class Employee {
@@ -12,7 +17,14 @@ public class Employee {
     private long salary;
     private long cacheBonus;
 
-    public Employee(String firstName, String midName, String lastName, LocalDate birthDay, LocalDate hiringDate, long salary) {
+    private EmployeeType positionType;
+    private String positionName;
+
+    public Employee(String firstName, String midName, String lastName,
+                    LocalDate birthDay, LocalDate hiringDate,
+                    long salary,
+                    EmployeeType positionType,
+                    String positionMane) {
         this.firstName = firstName;
         this.midName = midName;
         this.lastName = lastName;
@@ -22,6 +34,8 @@ public class Employee {
         this.cacheBonus=0;
         this.id=0;
         this.departmentId=0;
+        this.positionType=positionType;
+        this.positionName=positionMane;
     }
 
     public long getId() {
@@ -46,10 +60,6 @@ public class Employee {
 
     public void setCacheBonus(long cacheBonus) {
         this.cacheBonus = cacheBonus;
-    }
-
-    public String getFullName() {
-        return firstName+" "+midName+" "+lastName;
     }
 
     public String getFirstName() {
@@ -84,14 +94,6 @@ public class Employee {
         this.salary = salary;
     }
 
-    public long getBonus() {
-        return cacheBonus;
-    }
-
-    public void setBonus(long bonus) {
-        this.cacheBonus = bonus;
-    }
-
     public LocalDate getBirthDay() {
         return birthDay;
     }
@@ -107,5 +109,34 @@ public class Employee {
     public void setHiringDate(LocalDate hiringDate) {
         this.hiringDate = hiringDate;
     }
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
+
+    public EmployeeType getPositionType() {
+        return positionType;
+    }
+
+    public void setPositionType(EmployeeType positionType) {
+        this.positionType = positionType;
+    }
+
+    void addSubordinate(Employee e){
+        throw new AccessControlException(TextFactory.getString(TextConstants.YOU_CANT_DO_THIS));
+    }
+
+    void addSubordinates(LinkedList<Employee> e){
+        throw new AccessControlException(TextFactory.getString(TextConstants.YOU_CANT_DO_THIS));
+    }
+
+    void setDescription(String description){
+        throw new AccessControlException(TextFactory.getString(TextConstants.YOU_CANT_DO_THIS));
+    }
+
 
 }

@@ -2,6 +2,8 @@ package com.home.urix.PayRoll.View;
 
 public enum EmployeeMenuEnum {
     OPTION_SHOW_EMPLOYEES,
+    OPTION_SHOW_SORT_BY_LASTNAME,
+    OPTION_SHOW_SORT_BY_START_DATE,
     OPTION_ADD_EMPLOYEE,
     OPTION_EDIT_EMPLOYEE,
     OPTION_FIRE_EMPLOYEE,

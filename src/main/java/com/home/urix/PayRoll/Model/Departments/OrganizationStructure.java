@@ -1,6 +1,7 @@
 package com.home.urix.PayRoll.Model.Departments;
 
 import com.home.urix.PayRoll.Model.Employee.Employee;
+import com.home.urix.PayRoll.Model.Employee.EmployeeType;
 
 import java.math.BigDecimal;
 import java.util.LinkedList;

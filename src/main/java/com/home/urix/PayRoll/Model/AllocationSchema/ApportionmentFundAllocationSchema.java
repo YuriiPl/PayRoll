@@ -1,6 +1,5 @@
 package com.home.urix.PayRoll.Model.AllocationSchema;
 
-import com.home.urix.PayRoll.Model.Departments.OrganizationStructure;
 import com.home.urix.PayRoll.Model.Employee.Employee;
 
 import java.math.BigDecimal;
@@ -19,7 +18,7 @@ public class ApportionmentFundAllocationSchema extends FundAllocationSchema {
         BigDecimal R = BigDecimal.valueOf(0);
         for (Employee employee : employees) {
             R = R.add(fundAmount.multiply(BigDecimal.valueOf(employee.getSalary())).divide(salarySum, 0, RoundingMode.HALF_UP));
-            employee.setBonus((R.subtract(oldR)).longValueExact());
+            employee.setCacheBonus((R.subtract(oldR)).longValueExact());
             oldR = R;
         }
     }
