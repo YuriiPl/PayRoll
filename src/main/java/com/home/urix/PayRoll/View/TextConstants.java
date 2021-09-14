@@ -13,6 +13,7 @@ public enum TextConstants {
     MENU_DEPARTMENTS_HEADER("menu.departments.header"),
     MENU_BALANCE_ALLOCATION_TYPE("balance.allocation.type"),
     MENU_BALANCE_ALLOCATION_PLACE("balance.allocation.place"),
+    MENU_EMPLOYEE_EDIT_CHOICE("menu.employee.edit"),
     ENTER_DEPARTMENT_NAME("enter.department.name"),
     ALREADY_EXISTS("error.already.exists"),
     DEPARTMENT_NOT_EMPTY("error.department.not.empty"),
@@ -25,8 +26,9 @@ public enum TextConstants {
     EMPLOYEE_ENTER_START_DATE("employee.enter.start.date"),
     EMPLOYEE_SALARY("employee.specify.salary"),
     DATE_FORMAT("date.format"),
-    //CHOOSE_DEPARTMENT("choose.department"),
-    CHOOSE_NUMBER_TO_REMOVE_USER("choose.number.to.remove"),
+    CHOOSE_DEPARTMENT("choose.department"),
+    CHOOSE_NUMBER_FOR_REMOVING_USER("choose.number.to.remove.user"),
+    CHOOSE_NUMBER_FOR_EDITING_USER("choose.number.to.edit.user"),
     ERROR_NO_DEPARTMENTS("error.no.departments");
 
 

@@ -2,36 +2,28 @@ package com.home.urix.PayRoll.Model.Departments;
 
 import com.home.urix.PayRoll.Model.Employee.Employee;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.LinkedList;
 
 public class Department extends OrganizationStructure {
     private final LinkedList<Employee> employeesList = new LinkedList<>();
-    private int id;
+    private long id;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public Department(String name){
+    public Department(String name, long id){
         setName(name);
+        setId(id);
     }
 
-//    void hireEmployee(Employee employee){
-//        employeesList.add(employee);
-//    }
-
-    public void fireEmployee(Employee employee){
-        employeesList.remove(employee);
-    }
-
-    public void fireEmployee(int pos){
-        employeesList.remove(pos);
+    public Employee fireEmployee(int pos){
+        return employeesList.remove(pos);
     }
 
     @Override
@@ -39,8 +31,8 @@ public class Department extends OrganizationStructure {
         return employeesList;
     }
 
-    public void addNewEmployee(String firstName, String midName, String lastName, LocalDate birthDay, LocalDate startDate, long salary){
-        employeesList.add(new Employee(firstName,midName,lastName,birthDay,startDate,salary));
+    public void addNewEmployee(Employee employee){
+        employeesList.add(employee);
     }
 
 }

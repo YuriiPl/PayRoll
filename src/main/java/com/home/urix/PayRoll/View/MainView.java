@@ -21,10 +21,6 @@ public interface MainView {
         System.out.println(str);
     }
 
-    static void wrongInputDataMessage() {
-        System.out.println(TextFactory.getString(TextConstants.WRONG_INPUT_DATA));
-    }
-
     static void changeLocale(Locale locale){
         TextFactory.changeLocale(locale);
     }
@@ -33,49 +29,7 @@ public interface MainView {
         return TextFactory.getLocale();
     }
 
-    static void showActionMenu(){
-        MainView.printMessageById(TextConstants.MENU_HEADER);
-        for (MainMenuEnum opt : MainMenuEnum.values()) {
-            MainView.printMenuById(opt);
-        }
-    }
-
-    static void showLanguageMenu(){
-        MainView.printMessageById(TextConstants.CHOOSE_LANGUAGE_MESSAGE);
-        for (LanguageEnum opt : LanguageEnum.values()) {
-            MainView.printMenuById(opt);
-        }
-    }
-
-    static void showEmployeesMenu(){
-        MainView.printMessageById(TextConstants.MENU_EMPLOYEES_HEADER);
-        for (EmployeeMenuEnum opt : EmployeeMenuEnum.values()) {
-            MainView.printMenuById(opt);
-        }
-    }
-
-    static void showBalanceAllocationTypeMenu(){
-        MainView.printMessageById(TextConstants.MENU_BALANCE_ALLOCATION_TYPE);
-        for (BalanceAllocationTypeEnum opt : BalanceAllocationTypeEnum.values()) {
-            MainView.printMenuById(opt);
-        }
-    }
-
-    static void showBalanceAllocationPlaceMenu(){
-        MainView.printMessageById(TextConstants.MENU_BALANCE_ALLOCATION_PLACE);
-        for (BalanceAllocationPlaceEnum opt : BalanceAllocationPlaceEnum.values()) {
-            MainView.printMenuById(opt);
-        }
-    }
-
-    static void showDepartmentMenu() {
-        MainView.printMessageById(TextConstants.MENU_DEPARTMENTS_HEADER);
-        for (DepartmentsMenuEnum opt : DepartmentsMenuEnum.values()) {
-            MainView.printMenuById(opt);
-        }
-    }
-
-    static void inputWrongDataMessage() {
+    static void wrongInputDataMessage() {
         System.out.println(TextFactory.getString(TextConstants.WRONG_INPUT_DATA));
     }
 }

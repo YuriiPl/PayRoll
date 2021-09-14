@@ -5,9 +5,9 @@ import com.home.urix.PayRoll.Model.AllocationSchema.ApportionmentAllocation;
 import com.home.urix.PayRoll.Model.AllocationSchema.FlatAllocation;
 import com.home.urix.PayRoll.Model.Database.DataBase;
 import com.home.urix.PayRoll.Model.Database.SQLiteDb;
+import com.home.urix.PayRoll.Model.Departments.Department;
 import com.home.urix.PayRoll.Model.Departments.Organization;
 import com.home.urix.PayRoll.Model.Departments.OrganizationStructure;
-import com.home.urix.PayRoll.Model.Employee.Employee;
 import com.home.urix.PayRoll.Model.calculationSchema.DepartmentCalculation;
 import com.home.urix.PayRoll.Model.calculationSchema.OrganizationCalculation;
 import com.home.urix.PayRoll.Model.calculationSchema.CalculationSchema;
@@ -25,7 +25,7 @@ public class MainModel {
 
     public MainModel(){
         db = new SQLiteDb();
-        organization = new Organization();
+        organization = new Organization(db);
         allocationSchema = new FlatAllocation();
         calculationSchema = new OrganizationCalculation(organization);
     }
@@ -63,7 +63,7 @@ public class MainModel {
     }
 
     public void addDepartment(String departmentName){
-        organization.addDepartment(departmentName);
+        organization.addNewDepartment(departmentName);
     }
 
     public ArrayList<OrganizationStructure> departments(){
@@ -82,7 +82,39 @@ public class MainModel {
         organization.addNewEmployee(departmentNumber,firstName,midName,lastName,birthDay,startDate,salary);
     }
 
-    public LinkedList<Employee> allUsers(){
-        return organization.employees();
+    public void loadData() {
+        organization.loadFromDb();
+    }
+
+    public void fireEmployee(int employeePos, Department department) {
+        organization.fireEmployee(employeePos,department);
+    }
+
+    public void editEmployeesFirstName(int employeeIndex, Department department, String firstName) {
+        organization.editEmployeesFirstName(employeeIndex,department,firstName);
+    }
+
+    public void editEmployeesMiddleName(int employeeIndex, Department department, String midName) {
+        organization.editEmployeesMiddleName(employeeIndex,department,midName);
+    }
+
+    public void editEmployeesLastName(int employeeIndex, Department department, String lastName) {
+        organization.editEmployeesLastName(employeeIndex,department,lastName);
+    }
+
+    public void editEmployeesBirthday(int employeeIndex, Department department, LocalDate birthDay) {
+        organization.editEmployeesBirthday(employeeIndex,department,birthDay);
+    }
+
+    public void editEmployeesStartWorkingDate(int employeeIndex, Department department, LocalDate startWorkingDate) {
+        organization.editEmployeesStartWorkingDate(employeeIndex,department,startWorkingDate);
+    }
+
+    public void editEmployeesSalary(int employeeIndex, Department department, long salary) {
+        organization.editEmployeesSalary(employeeIndex,department,salary);
+    }
+
+    public void editEmployeesDepartment(int employeeIndex, Department department, int newDepartmentNumber) {
+        organization.editEmployeesDepartment(employeeIndex,department,newDepartmentNumber);
     }
 }

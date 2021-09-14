@@ -1,5 +1,6 @@
 package com.home.urix.PayRoll.Controller;
 
+import com.home.urix.PayRoll.Main;
 import com.home.urix.PayRoll.Model.Departments.Department;
 import com.home.urix.PayRoll.Model.Departments.OrganizationStructure;
 import com.home.urix.PayRoll.Model.Employee.Employee;
@@ -22,7 +23,6 @@ import java.util.Scanner;
 
 
 public class MainController {
-    MainView view;
     MainModel model;
     Scanner scanner;
 
@@ -31,13 +31,12 @@ public class MainController {
         model = new MainModel();
     }
 
-    private interface VoidFunction {
-        public void showMenu();
-    }
-
-    private <EnumTemplate extends Enum<EnumTemplate>> EnumTemplate showEnumMenu(EnumTemplate[] enums, VoidFunction menu){
+    private <EnumTemplate extends Enum<EnumTemplate>> EnumTemplate getIntFromEnumMenu(EnumTemplate[] enums, TextConstants msgId){
         while(true) {
-            menu.showMenu();
+            MainView.printMessageById(msgId);
+            for (EnumTemplate opt : enums) {
+                MainView.printMenuById(opt);
+            }
             try {
                 int userChoice = Integer.parseInt(scanner.nextLine());
                 if(userChoice >= 0 && userChoice < enums.length){
@@ -50,28 +49,34 @@ public class MainController {
         }
     }
 
+
     private LanguageEnum getUserLanguageChoice(){
-        return showEnumMenu(LanguageEnum.values(),MainView::showLanguageMenu);
+        return getIntFromEnumMenu(LanguageEnum.values(),TextConstants.CHOOSE_LANGUAGE_MESSAGE);
     }
 
     private MainMenuEnum getUserMenuChoice(){
-        return showEnumMenu(MainMenuEnum.values(),MainView::showActionMenu);
+        return getIntFromEnumMenu(MainMenuEnum.values(),TextConstants.CHOOSE_LANGUAGE_MESSAGE);
     }
 
     private EmployeeMenuEnum getEmployeeMenuChoice(){
-        return showEnumMenu(EmployeeMenuEnum.values(),MainView::showEmployeesMenu);
+        return getIntFromEnumMenu(EmployeeMenuEnum.values(),TextConstants.MENU_EMPLOYEES_HEADER);
     }
 
     private DepartmentsMenuEnum getDepartmentMenuChoice(){
-        return showEnumMenu(DepartmentsMenuEnum.values(),MainView::showDepartmentMenu);
+        return getIntFromEnumMenu(DepartmentsMenuEnum.values(),TextConstants.MENU_DEPARTMENTS_HEADER);
     }
 
     private BalanceAllocationTypeEnum getBalanceAllocationType(){
-        return showEnumMenu(BalanceAllocationTypeEnum.values(),MainView::showBalanceAllocationTypeMenu);
+        return getIntFromEnumMenu(BalanceAllocationTypeEnum.values(),TextConstants.MENU_BALANCE_ALLOCATION_TYPE);
     }
 
     private BalanceAllocationPlaceEnum getBalanceAllocationPlace(){
-        return showEnumMenu(BalanceAllocationPlaceEnum.values(),MainView::showBalanceAllocationPlaceMenu);
+        return getIntFromEnumMenu(BalanceAllocationPlaceEnum.values(),TextConstants.MENU_BALANCE_ALLOCATION_PLACE);
+    }
+
+    private EmployeeEditMenuEnum getEmployeeEditMenuChoice(Department department, int employeeIndex) {
+        MainView.printString(employeeToString(department.employees().get(employeeIndex)));
+        return getIntFromEnumMenu(EmployeeEditMenuEnum.values(),TextConstants.MENU_EMPLOYEE_EDIT_CHOICE);
     }
 
     private BigDecimal inputSalaryCentsWithScanner(Locale locale, TextConstants message){
@@ -98,7 +103,7 @@ public class MainController {
         MainView.printMessageById(messageResourceBundleId);
         String userInput = scanner.nextLine();
         while(!userInput.matches(currentRegExp)) {
-            MainView.inputWrongDataMessage();
+            MainView.wrongInputDataMessage();
             MainView.printMessageById(messageResourceBundleId);
             userInput = scanner.nextLine();
         }
@@ -108,6 +113,7 @@ public class MainController {
     public void startProcess(){
         try {
             model.connectToDatabase("payroll.db");
+            model.loadData();
         } catch (SQLException e) {
             MainView.printMessageById(TextConstants.SQL_CONNECT_ERROR_MESSAGE);
             return;
@@ -125,14 +131,14 @@ public class MainController {
         while((userChoice = getUserMenuChoice())!= MainMenuEnum.OPTION_EXIT) {
             switch (userChoice){
                 case OPTION_SPECIFY_FUND:
-                    //model.setSalaryFundCents(inputSalaryFundWithScanner(MainView.getLocale()));
+                    specifyFund();
                     break;
                 case OPTION_SHOW_EMPLOYEES_MENU:
                     EmployeeMenuEnum userEmployeeChoice;
                     while((userEmployeeChoice = getEmployeeMenuChoice())!= EmployeeMenuEnum.OPTION_EXIT) {
                         switch (userEmployeeChoice) {
                             case OPTION_SHOW_EMPLOYEES:
-                                showEmployees();
+                                showAllEmployees();
                                 break;
                             case OPTION_ADD_EMPLOYEE:
                                 addNewEmployee();
@@ -141,6 +147,7 @@ public class MainController {
                                 fireAnEmployee();
                                 break;
                             case OPTION_EDIT_EMPLOYEE:
+                                editEmployeeData();
                                 break;
                         }
                     }
@@ -150,11 +157,7 @@ public class MainController {
                     while((userDepartmentChoice = getDepartmentMenuChoice())!= DepartmentsMenuEnum.OPTION_EXIT) {
                         switch (userDepartmentChoice) {
                             case OPTION_ADD_DEPARTMENT:
-                                try {
-                                    model.addDepartment(getStringFromScanner(TextConstants.ENTER_DEPARTMENT_NAME, RegExpConstants.REGEX_WORDS_NUMBERS));
-                                } catch (IllegalArgumentException ignored){
-                                    MainView.printMessageById(TextConstants.ALREADY_EXISTS);
-                                }
+                                addDepartment();
                             case OPTION_SHOW_DEPARTMENTS:
                                 printDepartmentsNames();
                                 break;
@@ -194,7 +197,7 @@ public class MainController {
                     for(OrganizationStructure structure : model.getCurrentModelDepartments()){
                         MainView.printString(structure.getName());
                         for(Employee employee: structure.employees()){
-                            MainView.printString(String.valueOf(employee));
+                            MainView.printString(employeeToString(employee));
                         }
                     }
                     break;
@@ -207,23 +210,35 @@ public class MainController {
 
     }
 
+    private void specifyFund() {
+        MainView.printString("NOT IMPLEMENTED MainController specifyFund");
+        //model.setSalaryFundCents(inputSalaryFundWithScanner(MainView.getLocale()));
+
+    }
+
+    private void addDepartment() {
+        try {
+            model.addDepartment(getStringFromScanner(TextConstants.ENTER_DEPARTMENT_NAME, RegExpConstants.REGEX_WORDS_NUMBERS));
+        } catch (IllegalArgumentException ignored){
+            MainView.printMessageById(TextConstants.ALREADY_EXISTS);
+        }
+    }
+
     private void fireAnEmployee() {
-        //printDepartmentsNames();
-        //MainView.printMessageById(TextConstants.CHOOSE_DEPARTMENT);
         Department department = (Department) model.departments().get(getDepartmentPosition());
         if(department.employees().size()==0){
             MainView.printMessageById(TextConstants.DEPARTMENT_IS_EMPTY);
             return;
         }
-        MainView.printMessageById(TextConstants.CHOOSE_NUMBER_TO_REMOVE_USER);
-        for(Employee user : department.employees()){
-            MainView.printString(user.toString());
-        }
+        MainView.printMessageById(TextConstants.CHOOSE_NUMBER_FOR_REMOVING_USER);
+        showEmployees(department.employees());
         while(true) {
             try {
-                int userChoice = Integer.parseInt(scanner.nextLine());
+                String line = scanner.nextLine();
+                if(line.length()==0)break;;
+                int userChoice = Integer.parseInt(line);
                 if (userChoice >= 0 && userChoice < department.employees().size()) {
-                    department.fireEmployee(userChoice);
+                    model.fireEmployee(userChoice,department);
                     break;
                 }
                 MainView.wrongInputDataMessage();
@@ -233,7 +248,7 @@ public class MainController {
         }
     }
 
-    private void showEmployees() {
+    private void showAllEmployees() {
         ArrayList<OrganizationStructure> structs = model.departments();
         for (OrganizationStructure struct :structs){
             Department department = (Department)struct;
@@ -241,10 +256,24 @@ public class MainController {
             if(department.employees().size()==0){
                 MainView.printMessageById(TextConstants.DEPARTMENT_IS_EMPTY);
             }
-            for(Employee user : department.employees()){
-                MainView.printString(user.toString());
-            }
+            showEmployees(department.employees());
         }
+    }
+
+    private void showEmployees(LinkedList<Employee> employees) {
+        int i=0;
+        for(Employee user : employees){
+            MainView.printString(i++ +". "+ employeeToString(user));
+        }
+    }
+
+    private String employeeToString(Employee user) {
+        return  "{ firstName='" + user.getFirstName() + '\'' +
+                ", midName='" + user.getMidName() + '\'' +
+                ", lastName='" + user.getLastName() + '\'' +
+                ", birthDay=" + user.getBirthDay().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT))) +
+                ", hiringDate=" + user.getHiringDate().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT))) +
+                ", salary=" + ((double) user.getSalary()) / 100 + ", bonus=" + user.getCacheBonus() + " }";
     }
 
     private void addNewEmployee() {
@@ -252,6 +281,7 @@ public class MainController {
             MainView.printMessageById(TextConstants.ERROR_NO_DEPARTMENTS);
             return;
         }
+        MainView.printMessageById(TextConstants.CHOOSE_DEPARTMENT);
         int departmentNumber=getDepartmentPosition();
         String lastName=getStringFromScanner(TextConstants.EMPLOYEE_ENTER_LAST_NAME, RegExpConstants.REGEXP_NAME);
         String firstName=getStringFromScanner(TextConstants.EMPLOYEE_ENTER_FIRST_NAME, RegExpConstants.REGEXP_NAME);
@@ -281,6 +311,78 @@ public class MainController {
         model.addNewEmployee(departmentNumber,firstName,midName,lastName,birthDay,startDate,salary);
     }
 
+    private void editEmployeeData() {
+        MainView.printMessageById(TextConstants.CHOOSE_DEPARTMENT);
+        Department department = (Department) model.departments().get(getDepartmentPosition());
+        if(department.employees().size()==0){
+            MainView.printMessageById(TextConstants.DEPARTMENT_IS_EMPTY);
+            return;
+        }
+        MainView.printMessageById(TextConstants.CHOOSE_NUMBER_FOR_EDITING_USER);
+        showEmployees(department.employees());
+        int employeeIndex;
+        while(true) {
+            try {
+                employeeIndex = Integer.parseInt(scanner.nextLine());
+                if (employeeIndex >= 0 && employeeIndex < department.employees().size()) {
+                    break;
+                }
+                MainView.wrongInputDataMessage();
+            } catch (NumberFormatException e) {
+                MainView.wrongInputDataMessage();
+            }
+        }
+        EmployeeEditMenuEnum editMenuEnum;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT));
+        while((editMenuEnum = getEmployeeEditMenuChoice(department,employeeIndex))!= EmployeeEditMenuEnum.OPTION_EXIT) {
+            switch (editMenuEnum){
+                case OPTION_FIRSTNAME:
+                    String firstName=getStringFromScanner(TextConstants.EMPLOYEE_ENTER_FIRST_NAME, RegExpConstants.REGEXP_NAME);
+                    model.editEmployeesFirstName(employeeIndex,department,firstName);
+                    break;
+                case OPTION_MIDDLE_NAME:
+                    String midName=getStringFromScanner(TextConstants.EMPLOYEE_ENTER_MIDDLE_NAME, RegExpConstants.REGEXP_NAME_OPT);
+                    model.editEmployeesMiddleName(employeeIndex,department,midName);
+                    break;
+                case OPTION_LASTNAME:
+                    String lastName=getStringFromScanner(TextConstants.EMPLOYEE_ENTER_LAST_NAME, RegExpConstants.REGEXP_NAME);
+                    model.editEmployeesLastName(employeeIndex,department,lastName);
+                    break;
+                case OPTION_BIRTHDAY:
+                    while(true) {
+                        String stringDate = getStringFromScanner(TextConstants.EMPLOYEE_ENTER_BIRTHDAY, RegExpConstants.REGEXP_DATE);
+                        try {
+                            model.editEmployeesBirthday(employeeIndex,department,LocalDate.parse(stringDate, formatter));
+                            break;
+                        } catch (DateTimeParseException e) {
+                            MainView.wrongInputDataMessage();
+                        }
+                    }
+                    break;
+                case OPTION_HIRE_DATE:
+                    while(true) {
+                        String stringDate = getStringFromScanner(TextConstants.EMPLOYEE_ENTER_START_DATE, RegExpConstants.REGEXP_DATE);
+                        try {
+                            model.editEmployeesStartWorkingDate(employeeIndex,department,LocalDate.parse(stringDate, formatter));
+                            break;
+                        } catch (DateTimeParseException e) {
+                            MainView.wrongInputDataMessage();
+                        }
+                    }
+                    break;
+                case OPTION_SALARY:
+                    long salary = inputSalaryCentsWithScanner(MainView.getLocale(),TextConstants.EMPLOYEE_SALARY).longValue();
+                    model.editEmployeesSalary(employeeIndex,department,salary);
+                    break;
+                case OPTION_DEPARTMENT:
+                        MainView.printMessageById(TextConstants.CHOOSE_DEPARTMENT);
+                        int departmentNumber=getDepartmentPosition();
+                        model.editEmployeesDepartment(employeeIndex, department, departmentNumber);
+                        return;
+            }
+        }
+    }
+
     private int getDepartmentPosition() {
         ArrayList<OrganizationStructure> departments = model.departments();
         int departmentNumber;
@@ -288,7 +390,6 @@ public class MainController {
         while(true) {
             try {
                 String userLine=scanner.nextLine();
-                //if(userLine.length()==0)return;
                 departmentNumber = Integer.parseInt(userLine);
                 if(departmentNumber >= 0 && departmentNumber < departments.size()){
                     break;
@@ -330,8 +431,7 @@ public class MainController {
         int i=0;
         StringBuilder listDepts = new StringBuilder(TextFactory.getString(TextConstants.TEXT_DEPARTMENT_LIST));
         for(OrganizationStructure dep : departments){
-            if(i%5==0)listDepts.append("\n");
-            listDepts.append(i++).append(". ").append(dep.getName()).append(" ");
+            listDepts.append("\n").append(i++).append(". ").append(dep.getName());
         }
         MainView.printString(listDepts.toString());
     }

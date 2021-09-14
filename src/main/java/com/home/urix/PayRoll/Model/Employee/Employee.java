@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 public class Employee {
     private long id;
+    private long departmentId;
     private String firstName, midName, lastName;
     private LocalDate birthDay;
     private LocalDate hiringDate;
@@ -18,7 +19,9 @@ public class Employee {
         this.birthDay = birthDay;
         this.hiringDate = hiringDate;
         this.salary = salary;
-        cacheBonus=0;
+        this.cacheBonus=0;
+        this.id=0;
+        this.departmentId=0;
     }
 
     public long getId() {
@@ -27,6 +30,22 @@ public class Employee {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(long departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public long getCacheBonus() {
+        return cacheBonus;
+    }
+
+    public void setCacheBonus(long cacheBonus) {
+        this.cacheBonus = cacheBonus;
     }
 
     public String getFullName() {
@@ -89,15 +108,4 @@ public class Employee {
         this.hiringDate = hiringDate;
     }
 
-    @Override
-    public String toString() {
-        return  "{ firstName='" + firstName + '\'' +
-                ", midName='" + midName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", birthDay=" + birthDay +
-                ", hiringDate=" + hiringDate +
-                ", salary=" + ((float)salary)/100 +
-                ", bonus=" + cacheBonus +
-                " }";
-    }
 }
