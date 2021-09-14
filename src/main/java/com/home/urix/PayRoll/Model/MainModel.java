@@ -120,7 +120,7 @@ public class MainModel {
         return organization.employees().size();
     }
 
-    public BalanceAllocationType fundAllocationSchemaType() {
+    public FundAllocationType fundAllocationSchemaType() {
         return fundAllocationchema.type();
     }
 
