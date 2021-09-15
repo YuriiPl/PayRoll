@@ -45,8 +45,10 @@ public class Department extends OrganizationStructure {
         return employeesList;
     }
 
-    public void addNewEmployee(Employee employee){
+    public int addNewEmployee(Employee employee){
         employeesList.add(employee);
+        //return employeesList.indexOf(employee);
+        return employeesList.size()-1;
     }
 
     public LinkedList<Employee> findAllOtherManagers(Employee manager){

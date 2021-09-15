@@ -311,6 +311,7 @@ public class MainController {
                 user.getLastName(),
                 user.getMidName(),
                 user.getBirthDay().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT))),
+                user.getHiringDate().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT))),
                 user.getPositionType(),
                 user.getPositionName(),
                 managerNameForEmployee(user),
@@ -374,7 +375,10 @@ public class MainController {
         long salary = inputSalaryCentsWithScanner(MainView.getLocale(),TextConstants.EMPLOYEE_SALARY).longValue();
         EmployeeType employeeType = getEmployeeType();
         String positionName=getStringFromScanner(TextConstants.EMPLOYEE_ENTER_POSITION_NAME, RegExpConstants.REGEX_WORDS_NUMBERS);
-        model.addNewEmployee(departmentNumber,firstName,midName,lastName,birthDay,startDate,salary,employeeType,positionName);
+        int posInDep=model.addNewEmployee(departmentNumber,firstName,midName,lastName,birthDay,startDate,salary,employeeType,positionName);
+        if(employeeType == EmployeeType.OTHER){
+            model.editEmployeeDescription(posInDep,departmentNumber,getStringFromScanner(TextConstants.EMPLOYEE_SPECIFY_DESCRIPTION, RegExpConstants.REGEX_WORDS_NUMBERS));
+        }
     }
 
     int getIndexEmployeeFromUser(OrganizationStructure struct, TextConstants textId){
@@ -445,11 +449,15 @@ public class MainController {
                     long salary = inputSalaryCentsWithScanner(MainView.getLocale(),TextConstants.EMPLOYEE_SALARY).longValue();
                     model.editEmployeesSalary(employeeIndex,department,salary);
                     break;
+                case OPTION_SET_DESCRIPTION:
+
+                    model.editEmployeeDescription(employeeIndex,department,getStringFromScanner(TextConstants.EMPLOYEE_SPECIFY_DESCRIPTION, RegExpConstants.REGEX_WORDS_NUMBERS));
+                    break;
                 case OPTION_DEPARTMENT:
-                        MainView.printMessageById(TextConstants.CHOOSE_DEPARTMENT);
-                        int departmentNumber=getDepartmentPosition();
-                        model.editEmployeesDepartment(employeeIndex, department, departmentNumber);
-                        return;
+                    MainView.printMessageById(TextConstants.CHOOSE_DEPARTMENT);
+                    int departmentNumber=getDepartmentPosition();
+                    model.editEmployeesDepartment(employeeIndex, department, departmentNumber);
+                    return;
                 case OPTION_POSITION_TYPE:
                     EmployeeType employeeType = getEmployeeType();
                     model.editEmployeesPositionType(employeeIndex,department,employeeType);

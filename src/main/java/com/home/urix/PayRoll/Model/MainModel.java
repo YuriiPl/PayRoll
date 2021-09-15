@@ -79,10 +79,10 @@ public class MainModel {
         organization.changeDepartmentName(departmentPosition,newName);
     }
 
-    public void addNewEmployee(int departmentNumber, String firstName, String midName, String lastName,
+    public int addNewEmployee(int departmentNumber, String firstName, String midName, String lastName,
                                LocalDate birthDay, LocalDate startDate, long salary,
                                EmployeeType employeeType, String positionName) {
-        organization.addNewEmployee(departmentNumber,firstName,midName,lastName,birthDay,startDate,salary,
+        return organization.addNewEmployee(departmentNumber,firstName,midName,lastName,birthDay,startDate,salary,
                 employeeType,positionName);
     }
 
@@ -155,5 +155,14 @@ public class MainModel {
             if(employee.getId()==e.getManagerId()) return employee;
         }
         throw new RuntimeException("Manager for employee not found");
+    }
+
+    public void editEmployeeDescription(int employeeIndex, int departmentNumber, String stringFromScanner) {
+        Department department = (Department) organization.departments().get(departmentNumber);
+        editEmployeeDescription(employeeIndex,department,stringFromScanner);
+    }
+
+    public void editEmployeeDescription(int employeeIndex, Department department, String stringFromScanner) {
+        organization.editEmployeeDescription(employeeIndex,department,stringFromScanner);
     }
 }

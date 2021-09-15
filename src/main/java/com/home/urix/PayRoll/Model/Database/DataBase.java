@@ -47,5 +47,6 @@ public interface DataBase {
 
     boolean editEmployeesManager(long id, long id1);
 
+    boolean editEmployeeDescription(long id, String description);
 }
 

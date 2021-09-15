@@ -66,12 +66,13 @@ public class Organization  extends OrganizationStructure {
         }
     }
 
-    public void addNewEmployee(int departmentNumber, String firstName, String midName, String lastName, LocalDate birthDay, LocalDate startDate, long salary, EmployeeType employeeType, String positionName){
+    public int addNewEmployee(int departmentNumber, String firstName, String midName, String lastName, LocalDate birthDay, LocalDate startDate, long salary, EmployeeType employeeType, String positionName){
         Employee employee = new Employee(firstName,midName,lastName,birthDay,startDate,salary,employeeType,positionName);
         Department department = (Department)departments.get(departmentNumber);
         if(db.addEmployee(employee,department.getId())) {
-            department.addNewEmployee(employee);
+            return department.addNewEmployee(employee);
         }
+        throw new RuntimeException();
     }
 
 
@@ -175,6 +176,13 @@ public class Organization  extends OrganizationStructure {
         Employee manager = department.employees().get(managerIndex);
         if(db.editEmployeesManager(employee.getId(),manager.getId())) {
             employee.setManager(manager);
+        }
+    }
+
+    public void editEmployeeDescription(int employeeIndex, Department department, String description){
+        Employee employee = department.employees().get(employeeIndex);
+        if(db.editEmployeeDescription(employee.getId(),description)) {
+            employee.setDescription(description);
         }
     }
 

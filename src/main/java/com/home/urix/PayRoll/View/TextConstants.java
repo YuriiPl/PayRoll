@@ -26,6 +26,7 @@ public enum TextConstants {
     EMPLOYEE_ENTER_START_DATE("employee.enter.start.date"),
     EMPLOYEE_ENTER_POSITION_NAME("employee.enter.position.name"),
     EMPLOYEE_SALARY("employee.specify.salary"),
+    EMPLOYEE_SPECIFY_DESCRIPTION("employee.specify.description"),
     DATE_FORMAT("date.format"),
     CHOOSE_DEPARTMENT("choose.department"),
     CHOOSE_NUMBER_FOR_REMOVING_USER("choose.number.to.remove.user"),
