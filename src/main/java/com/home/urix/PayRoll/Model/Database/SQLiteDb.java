@@ -4,6 +4,9 @@ import com.home.urix.PayRoll.Model.Departments.Department;
 import com.home.urix.PayRoll.Model.Employee.Employee;
 import com.home.urix.PayRoll.Model.Employee.EmployeeType;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -37,6 +40,27 @@ public class SQLiteDb implements DataBase {
             Class.forName(driverName);
             String connectionString = "jdbc:sqlite:";
             connection = DriverManager.getConnection(connectionString + dbName);
+
+            if(connected()){
+                try {
+                    String allFile=new String(Files.readAllBytes(Paths.get("main.sql")));
+                    String[] commands=allFile.split(";");
+                    for(String string : commands) {
+                        if(string.trim().length()==0)continue;
+                        try (
+                                PreparedStatement statement = connection.prepareStatement(string+";", Statement.RETURN_GENERATED_KEYS)
+                        ) {
+                                statement.executeUpdate();
+                        } catch (SQLException e) {
+                            System.out.println(string);
+                            e.printStackTrace();
+                        }
+                    }
+
+                } catch(Exception e){
+                    throw new RuntimeException(e);
+                }
+            }
     }
 
     private int getCount(String request){
