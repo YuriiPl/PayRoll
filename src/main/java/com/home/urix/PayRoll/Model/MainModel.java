@@ -145,4 +145,8 @@ public class MainModel {
     public LinkedList<Employee> getAllEmployees(){
         return organization.employees();
     }
+
+    public void editEmployeesManager(int employeeIndex, Department department, int managerIndex) {
+        organization.editEmployeesManager(employeeIndex,department,managerIndex);
+    }
 }

@@ -28,6 +28,7 @@ public class SQLiteDb implements DataBase {
     private static final String EDIT_EMPLOYEES_DEPARTMENT ="UPDATE Employee SET DepartmentId=? WHERE id=?";
     private static final String EDIT_EMPLOYEES_POSITION_NAME = "UPDATE Employee SET PositionName=? WHERE id=?";
     private static final String EDIT_EMPLOYEES_POSITION_TYPE = "UPDATE Employee SET PositionType=? WHERE id=?";
+    private static final String EDIT_EMPLOYEES_MANAGER = "UPDATE Employee SET ManagerId=? WHERE id=?";
 
     @Override
     public void open(String dbName) throws ClassNotFoundException, SQLException {
@@ -74,6 +75,7 @@ public class SQLiteDb implements DataBase {
                         rs.getLong("Payment"), EmployeeType.typeFromInt(rs.getInt("PositionType")),rs.getString("PositionName"));
                 d.setId(rs.getInt("id"));
                 d.setDepartmentId(rs.getLong("DepartmentId"));
+                d.setManagerIdFromDb(rs.getLong("ManagerId"));
                 employees[i++]=d;
             }
         } catch (SQLException e) {
@@ -213,6 +215,11 @@ public class SQLiteDb implements DataBase {
     @Override
     public boolean editEmployeesPositionType(long id, EmployeeType employeeType) {
         return updateDbLongDataById(EDIT_EMPLOYEES_POSITION_TYPE,id,employeeType.value());
+    }
+
+    @Override
+    public boolean editEmployeesManager(long id, long managerId) {
+        return updateDbLongDataById(EDIT_EMPLOYEES_MANAGER,id,managerId);
     }
 
     @Override

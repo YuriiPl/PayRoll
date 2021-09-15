@@ -153,4 +153,12 @@ public class Organization  extends OrganizationStructure {
         }
     }
 
+    public void editEmployeesManager(int employeeIndex, Department department, int managerIndex){
+        Employee employee = department.employees().get(employeeIndex);
+        Employee manager = department.employees().get(managerIndex);
+        if(db.editEmployeesManager(employee.getId(),manager.getId())) {
+            employee.setManager(manager);
+        }
+    }
+
 }

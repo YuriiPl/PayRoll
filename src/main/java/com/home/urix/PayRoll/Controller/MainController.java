@@ -10,6 +10,7 @@ import com.home.urix.PayRoll.View.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.security.AccessControlException;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -354,20 +355,14 @@ public class MainController {
         model.addNewEmployee(departmentNumber,firstName,midName,lastName,birthDay,startDate,salary,employeeType,positionName);
     }
 
-    private void editEmployeeData() {
-        MainView.printMessageById(TextConstants.CHOOSE_DEPARTMENT);
-        Department department = (Department) model.departments().get(getDepartmentPosition());
-        if(department.employees().size()==0){
-            MainView.printMessageById(TextConstants.DEPARTMENT_IS_EMPTY);
-            return;
-        }
-        MainView.printMessageById(TextConstants.CHOOSE_NUMBER_FOR_EDITING_USER);
-        showEmployees(department.employees());
+    int getIndexEmployeeFromUser(OrganizationStructure struct, TextConstants textId){
+        MainView.printMessageById(textId);
+        showEmployees(struct.employees());
         int employeeIndex;
         while(true) {
             try {
                 employeeIndex = Integer.parseInt(scanner.nextLine());
-                if (employeeIndex >= 0 && employeeIndex < department.employees().size()) {
+                if (employeeIndex >= 0 && employeeIndex < struct.employees().size()) {
                     break;
                 }
                 MainView.wrongInputDataMessage();
@@ -375,6 +370,17 @@ public class MainController {
                 MainView.wrongInputDataMessage();
             }
         }
+        return employeeIndex;
+    }
+
+    private void editEmployeeData() {
+        MainView.printMessageById(TextConstants.CHOOSE_DEPARTMENT);
+        Department department = (Department) model.departments().get(getDepartmentPosition());
+        if(department.employees().size()==0){
+            MainView.printMessageById(TextConstants.DEPARTMENT_IS_EMPTY);
+            return;
+        }
+        int employeeIndex = getIndexEmployeeFromUser(department,TextConstants.CHOOSE_NUMBER_FOR_EDITING_USER);
         EmployeeEditMenuEnum editMenuEnum;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT));
         while((editMenuEnum = getEmployeeEditMenuChoice(department,employeeIndex))!= EmployeeEditMenuEnum.OPTION_EXIT) {
@@ -429,8 +435,18 @@ public class MainController {
                 case OPTION_POSITION_NAME:
                     String positionName=getStringFromScanner(TextConstants.EMPLOYEE_ENTER_POSITION_NAME, RegExpConstants.REGEX_WORDS_NUMBERS);
                     model.editEmployeesPositionName(employeeIndex,department,positionName);
-
-
+                    break;
+                case OPTION_SET_MANAGER:
+                    int managerIndex = getIndexEmployeeFromUser(department,TextConstants.CHOOSE_MANAGER_NUMBER);
+                    if(employeeIndex==managerIndex) {
+                        MainView.printMessageById(TextConstants.YOU_CANT_DO_THIS);
+                        break;
+                    }
+                    try {
+                        model.editEmployeesManager(employeeIndex, department, managerIndex);
+                    } catch (AccessControlException e){
+                        MainView.printMessageById(TextConstants.YOU_CANT_DO_THIS);
+                    }
                     break;
             }
         }

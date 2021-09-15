@@ -20,6 +20,9 @@ public class Employee {
     private EmployeeType positionType;
     private String positionName;
 
+    private long managerId=0;
+    private String description="";
+
     public Employee(String firstName, String midName, String lastName,
                     LocalDate birthDay, LocalDate hiringDate,
                     long salary,
@@ -126,17 +129,40 @@ public class Employee {
         this.positionType = positionType;
     }
 
-    void addSubordinate(Employee e){
-        throw new AccessControlException(TextFactory.getString(TextConstants.YOU_CANT_DO_THIS));
+//    void addSubordinate(Employee e){
+//        throw new AccessControlException(TextFactory.getString(TextConstants.YOU_CANT_DO_THIS));
+//    }
+//
+//    void addSubordinates(LinkedList<Employee> e){
+//        throw new AccessControlException(TextFactory.getString(TextConstants.YOU_CANT_DO_THIS));
+//    }
+
+    public void setDescription(String description){
+        if(positionType==EmployeeType.OTHER){
+            this.description=description;
+        }else {
+            throw new AccessControlException(TextFactory.getString(TextConstants.YOU_CANT_DO_THIS));
+        }
     }
 
-    void addSubordinates(LinkedList<Employee> e){
-        throw new AccessControlException(TextFactory.getString(TextConstants.YOU_CANT_DO_THIS));
+    public void setManager(Employee e){
+        if(e.positionType==EmployeeType.MANAGER){
+            managerId=e.getId();
+        } else {
+            throw new AccessControlException(TextFactory.getString(TextConstants.YOU_CANT_DO_THIS));
+        }
     }
 
-    void setDescription(String description){
-        throw new AccessControlException(TextFactory.getString(TextConstants.YOU_CANT_DO_THIS));
+    public void setManagerIdFromDb(long managerId){
+        this.managerId=managerId;
     }
 
+    public String getDescription(){
+        return description;
+    }
+
+    public long getManagerId(){
+        return id;
+    }
 
 }

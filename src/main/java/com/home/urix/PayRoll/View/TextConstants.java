@@ -30,6 +30,7 @@ public enum TextConstants {
     CHOOSE_DEPARTMENT("choose.department"),
     CHOOSE_NUMBER_FOR_REMOVING_USER("choose.number.to.remove.user"),
     CHOOSE_NUMBER_FOR_EDITING_USER("choose.number.to.edit.user"),
+    CHOOSE_MANAGER_NUMBER("choose.manager.number"),
     ERROR_NO_DEPARTMENTS("error.no.departments"),
     SPECIFY_SALARY_FUND("specify.salary.fund"),
     ERROR_SMALL_SALARY_FUND("small.salary.fund"),
