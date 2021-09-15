@@ -125,7 +125,8 @@ public class MainController {
             return;
         }
 
-        LanguageEnum lang = getUserLanguageChoice();
+//        LanguageEnum lang = getUserLanguageChoice();
+        LanguageEnum lang = LanguageEnum.ENGLISH;
         MainView.changeLocale(new Locale(lang.getLanguage(),lang.getCountry()));
 
         MainView.printMessageById(TextConstants.GREETINGS_MESSAGE);
