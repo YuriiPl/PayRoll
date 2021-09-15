@@ -269,7 +269,11 @@ public class MainController {
                 if(line.length()==0)break;;
                 int userChoice = Integer.parseInt(line);
                 if (userChoice >= 0 && userChoice < department.employees().size()) {
-                    model.fireEmployee(userChoice,department);
+                    try {
+                        model.fireEmployee(userChoice, department);
+                    }catch (AccessControlException e){
+                        MainView.printMessageById(TextConstants.YOU_CANT_DO_THIS);
+                    }
                     break;
                 }
                 MainView.wrongInputDataMessage();
@@ -299,14 +303,18 @@ public class MainController {
     }
 
     private String employeeToString(Employee user) {
-        return String.format(MainView.getMessageById(TextConstants.EMPLOYEE_TO_STRING),
+        TextConstants currentText=TextConstants.EMPLOYEE_TO_STRING;
+        if(user.getPositionType()==EmployeeType.MANAGER)currentText=TextConstants.EMPLOYEE_MANAGER_TO_STRING;
+        if(user.getPositionType()==EmployeeType.OTHER)currentText=TextConstants.EMPLOYEE_OTHER_TO_STRING;
+        return String.format(MainView.getMessageById(currentText),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getMidName(),
                 user.getBirthDay().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT))),
                 user.getPositionType(),
                 user.getPositionName(),
-                //user.getHiringDate().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT)))
+                managerNameForEmployee(user),
+                getEmployeeDescription(user),
                 ((double) user.getSalary()) / 100,
                 ((double) user.getCacheBonus()/100)
         );
@@ -316,6 +324,20 @@ public class MainController {
 //                ", birthDay=" + user.getBirthDay().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT))) +
 //                ", hiringDate=" + user.getHiringDate().format(DateTimeFormatter.ofPattern(TextFactory.getString(TextConstants.DATE_FORMAT))) +
 //                ", salary=" + ((double) user.getSalary()) / 100 + ", bonus=" + ((double)user.getCacheBonus()/100) + " }";
+    }
+
+    private String getEmployeeDescription(Employee user) {
+        return user.getDescription();
+    }
+
+    private String managerNameForEmployee(Employee e){
+        try {
+            Employee manager = model.getEmployeesManager(e);
+            return manager.getLastName();
+        } catch (RuntimeException ignore){
+            return "";
+        }
+
     }
 
     private void addNewEmployee() {

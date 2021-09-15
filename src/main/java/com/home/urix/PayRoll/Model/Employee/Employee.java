@@ -146,7 +146,7 @@ public class Employee {
     }
 
     public void setManager(Employee e){
-        if(e.positionType==EmployeeType.MANAGER){
+        if(positionType==EmployeeType.GENERAL && e.positionType==EmployeeType.MANAGER){
             managerId=e.getId();
         } else {
             throw new AccessControlException(TextFactory.getString(TextConstants.YOU_CANT_DO_THIS));
@@ -162,7 +162,10 @@ public class Employee {
     }
 
     public long getManagerId(){
-        return id;
+        return managerId;
     }
 
+    public void removeManager() {
+        id=0;
+    }
 }

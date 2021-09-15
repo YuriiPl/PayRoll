@@ -37,6 +37,8 @@ public enum TextConstants {
     SPECIFY_SALARY_FUND_FOR("specify.salary.fund.for"),
     FOR_MODEL_INFO("format.model.info"),
     EMPLOYEE_TO_STRING("format.employee.to.string"),
+    EMPLOYEE_MANAGER_TO_STRING("format.employee.manager.to.string"),
+    EMPLOYEE_OTHER_TO_STRING("format.employee.other.to.string"),
     YOU_CANT_DO_THIS("error.no.permissions");
 
     private final String value;

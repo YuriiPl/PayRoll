@@ -2,7 +2,10 @@ package com.home.urix.PayRoll.Model.Departments;
 import com.home.urix.PayRoll.Model.Database.DataBase;
 import com.home.urix.PayRoll.Model.Employee.Employee;
 import com.home.urix.PayRoll.Model.Employee.EmployeeType;
+import com.home.urix.PayRoll.View.TextConstants;
+import com.home.urix.PayRoll.View.TextFactory;
 
+import java.security.AccessControlException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -148,7 +151,21 @@ public class Organization  extends OrganizationStructure {
 
     public void editEmployeesPositionType(int employeeIndex, Department department, EmployeeType employeeType){
         Employee employee = department.employees().get(employeeIndex);
+        if(employeeType==employee.getPositionType())return;
+        Employee otherManager=null;
+        LinkedList<Employee> managers = department.findAllOtherManagers(employee);
+        if(employee.getPositionType()==EmployeeType.MANAGER){
+            if(managers.size()==0) throw new AccessControlException(TextFactory.getString(TextConstants.YOU_CANT_DO_THIS));
+            otherManager=managers.get(0);
+        }
         if(db.editEmployeesPositionType(employee.getId(),employeeType)) {
+            for(Employee employee1 : department.employees()){
+                if(employee1.getManagerId()==employee.getId()){
+                    assert otherManager != null;
+                    employee1.setManager(otherManager);
+                }
+            }
+            if(employeeType==EmployeeType.MANAGER)employee.removeManager();
             employee.setPositionType(employeeType);
         }
     }

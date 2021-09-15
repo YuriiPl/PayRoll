@@ -149,4 +149,11 @@ public class MainModel {
     public void editEmployeesManager(int employeeIndex, Department department, int managerIndex) {
         organization.editEmployeesManager(employeeIndex,department,managerIndex);
     }
+
+    public Employee getEmployeesManager(Employee e){
+        for (Employee employee : getAllEmployees()) {
+            if(employee.getId()==e.getManagerId()) return employee;
+        }
+        throw new RuntimeException("Manager for employee not found");
+    }
 }
