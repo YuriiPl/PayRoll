@@ -267,7 +267,7 @@ public class MainController {
         while(true) {
             try {
                 String line = scanner.nextLine();
-                if(line.length()==0)break;;
+                if(line.length()==0)break;
                 int userChoice = Integer.parseInt(line);
                 if (userChoice >= 0 && userChoice < department.employees().size()) {
                     try {
